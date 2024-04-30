@@ -1,0 +1,41 @@
+#sve {
+  padding:10px;
+  box-sizing: border-box;
+}
+#switch , #switch2{
+  margin-bottom:10px;
+  width:100%;
+  font-family: 'Libre Baskerville', serif;
+  font-size: x-large;
+}
+.podatak {
+  font-family: 'Libre Baskerville', serif;
+  font-size: x-large;
+  margin-bottom:10px;
+}
+select {
+  width:90px;
+  float:left;
+  margin-right:10px;
+  position:relative;
+  bottom:3px;
+}
+h4 {
+float:left;
+  margin-right:10px;
+}
+button {
+  position:relative;
+  bottom:5px;
+  margin-left:5px;
+}
+@media only screen and (max-width:950px) {
+  button {
+    margin-left:0;
+    position:static;
+    bottom:0;
+    clear:left;
+    display:block;
+    margin-top:10px;
+  }
+}

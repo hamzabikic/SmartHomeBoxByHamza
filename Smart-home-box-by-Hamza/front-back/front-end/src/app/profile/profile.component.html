@@ -1,0 +1,46 @@
+<div id="sve">
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="Name">First Name</label>
+      <input [(ngModel)]="korisnik!.ime" type="text" class="form-control" id="Name" placeholder="Name">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="surname">Last name</label>
+      <input [(ngModel)]="korisnik!.prezime" type="text" class="form-control" id="surname" placeholder="Surname">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="email">Email</label>
+      <input [(ngModel)]="korisnik!.email" type="email" class="form-control" id="email" placeholder="example@email.com">
+    </div>
+    <div class="form-group col-md-6">
+      <label for="telefon">Phone number</label>
+      <input [(ngModel)]="korisnik!.telefon" type="text" class="form-control" id="telefon" placeholder="38761000000">
+    </div>
+  </div>
+  <p>Receiving notifications:</p>
+  <div class="form-group">
+    <div class="form-check">
+      <input [(ngModel)]="korisnik!.emailSlanje" class="form-check-input" type="checkbox" id="Emailcb">
+      <label class="form-check-label" for="Emailcb">
+        Email
+      </label>
+    </div>
+    <div class="form-check">
+      <input [(ngModel)]="korisnik!.whatsAppSlanje" class="form-check-input" type="checkbox" id="WhatsApp">
+      <label class="form-check-label" for="WhatsApp">
+        WhatsApp
+      </label>
+    </div>
+    <div class="form-check">
+      <input [(ngModel)]="korisnik!.smsSlanje" class="form-check-input" type="checkbox" id="SMS">
+      <label class="form-check-label" for="SMS">
+        SMS
+      </label>
+    </div>
+  </div>
+  <button (click)="posaljiPodatke()" type="submit" class="btn btn-primary">Save changes</button>
+  <p id="note">Note: You start receiving notifications for 24 hours on WhatsApp of your entered phone number
+    by sending the message 'join wind-explore' to the phone number +14155238886. By sending any message in the chat
+    , you extend receiving notifications for the next 24 hours. You will receive a note in whatsApp chat 2 times a day
+    to extend receiving notifications. SMS and Email notifications do not require any configuration.</p>
+</div>

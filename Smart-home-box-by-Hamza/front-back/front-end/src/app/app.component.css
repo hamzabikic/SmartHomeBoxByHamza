@@ -1,0 +1,60 @@
+header {
+  height:fit-content;
+  margin-top:10px;
+  width:fit-content;
+  margin-left:auto;
+  margin-right:auto;
+}
+#logo {
+  width:300px;
+  display:block;
+  margin:auto;
+}
+#info {
+  width:50%;
+  height:530px;
+  margin-left:auto;
+  margin-right:auto;
+  margin-top:10px;
+  background-color: white;
+}
+nav {
+  width:50%;
+  margin-left:auto;
+  margin-right:auto;
+  margin-top:20px;
+}
+button img {
+  width:40px;
+  height:40px;
+  display:block;
+}
+button {
+  padding:10px;
+  border:none;
+}
+#id1, #id2, #id3, #id4 {
+  margin-right:10px;
+}
+#buttoni {
+  margin-left:auto;
+  margin-right:auto;
+  width:340px;
+}
+
+@media only screen and (max-width:750px) {
+  #info {
+    width:75%;
+  }
+  nav {
+    width:75%;
+  }
+}
+@media only screen and (max-width:500px) {
+  #info {
+    width:100%;
+  }
+  nav {
+    width:100%;
+  }
+}

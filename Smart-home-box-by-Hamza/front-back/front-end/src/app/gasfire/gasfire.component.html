@@ -1,0 +1,48 @@
+<div id="sve">
+  <div id="pregled">
+    <div class="podatak">GAS Sensor: <span [ngStyle]="gascss()">{{gasvalue}} ppm</span></div>
+    <div class="podatak">Gas/Fire Alarm: <span [ngStyle]="gasalarmcss()" >{{alarm}}</span></div>
+    <div class="podatak">Fire detected: <span [ngStyle]="firecss()">{{fire}}</span></div>
+    <button (click)="ugasiAlarm()" [disabled]="alarm !='Activated'" class="btn btn-danger">Turn off Alarm</button>
+  </div>
+  <div id="history">
+    <h5>History</h5>
+    <div id="filter">
+      <select [(ngModel)]="dropDown" (change)="ucitajHistory()" [disabled]="isDate" id="dropdown" class="form-select" aria-label="Default select example">
+        <option value="1">Today</option>
+        <option value="7">Last 7 days</option>
+        <option value="30">Last 30 days</option>
+      </select>
+      <div class="form-check" style="position:relative; top:5px;">
+        <input (change)="ucitajHistory()" [(ngModel)]="isDate" class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+        <label class="form-check-label" for="flexCheckChecked">
+          Filter by date
+        </label>
+      </div>
+      <input (change)="ucitajHistory()" [(ngModel)]="datum" style="margin-left:15px; position:relative; top:2.5px;" type="date"/>
+    </div>
+    <div id="tabela">
+      <table class="table table-sm">
+        <thead>
+        <tr>
+          <th class="table-info" scope="col">Date</th>
+          <th class="table-info" scope="col">Time</th>
+          <th class="table-info" scope="col">Gas value</th>
+          <th class="table-info" scope="col">Fire detected</th>
+          <th class="table-info" scope="col">Delete</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let x of historyLista">
+          <td class="table-primary">{{x.datum}}</td>
+          <td class="table-primary">{{x.vrijeme}}</td>
+          <td class="table-primary">{{x.gasValue}} ppm</td>
+          <td class="table-primary">{{x.fireDetected}}</td>
+          <td class="table-primary"><button id="brisanje" (click)="obrisi(x.id)" class="btn btn-danger">Delete</button></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
