@@ -27,7 +27,7 @@ int temperatureSensor = 14;
 int RIFSensor = 2;
 int buzzer2 = 12;
 int AlarmPokret = 0;
-int svjetlo =0;
+int svjetlo =4;
 dht11 DHT;
 WiFiClient client; // Kreiramo WiFiClient objekt
 HTTPClient http;
@@ -38,9 +38,7 @@ int getMinute() {
     if (httpCode > 0) {
       if (httpCode == HTTP_CODE_OK) {
         String payload = http.getString();
-        int minute = payload.toInt(); // Pretvara string u integer
-        Serial.print("Received integer: ");
-        Serial.println(minute);
+        minute = payload.toInt(); // Pretvara string u integer
       }
       else {
         return getMinute();
@@ -103,20 +101,45 @@ void slanjePokreta() {
     }
     http.end();
 }
+bool jeUpaljeno () {
+  http.begin(client, "http://smarthomeapi.p2347.app.fit.ba/Light/jeUpaljeno"); // Koristimo begin sa WiFiClient objektom
+  http.addHeader("Content-Type", "application/json");
 
-void setup() {
-  Serial.begin(115200);
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  Serial.print("Connecting to Wi-Fi");
-  while (WiFi.status() != WL_CONNECTED){
-    Serial.print(".");
-    delay(300);
+  int httpResponseCode = http.GET();
+
+    if (httpResponseCode == 200) {
+      bool responseBool = http.getString() == "true"; // Ako je odgovor "true", postavljamo responseBool na true, inače na false
+      if(responseBool == true) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    } else {
+      return jeUpaljeno();
+    }
+    http.end();
+}
+bool provjeraVeze() {
+  bool vrijednostbool = true;
+  http.begin(client, "http://smarthomeapi.p2347.app.fit.ba/TestirajKonekciju");
+  int httpCode = http.GET();
+  if (httpCode > 0) {
+    Serial.printf("HTTP kod odgovora: %d\n", httpCode);
+    if (httpCode == HTTP_CODE_OK) {
+
+    } else {
+      Serial.println("HTTP zahtjev neuspješan. Nema internet veze!");
+      vrijednostbool = false;
+    }
+  } else {
+    Serial.println("Nije moguće uspostaviti HTTP vezu. Nema internet veze!");
+    vrijednostbool = false;
   }
-  Serial.println();
-  Serial.print("Connected with IP: ");
-  Serial.println(WiFi.localIP());
-  Serial.println();
-
+  http.end();
+  return vrijednostbool;
+}
+void podesavanjeFirebase() {
   /* Assign the api key (required) */
   config.api_key = API_KEY;
 
@@ -137,6 +160,21 @@ void setup() {
   
   Firebase.begin(&config, &auth);
   Firebase.reconnectWiFi(true);
+}
+int AutomatskoSvjetlo =0;
+void setup() {
+  Serial.begin(115200);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  Serial.print("Connecting to Wi-Fi");
+  while (WiFi.status() != WL_CONNECTED){
+    Serial.print(".");
+    delay(300);
+  }
+  Serial.println();
+  Serial.print("Connected with IP: ");
+  Serial.println(WiFi.localIP());
+  Serial.println();
+  podesavanjeFirebase();
   // Postavljanje ugra?ene LED diode kao izlaznog
   pinMode(buzzer2, OUTPUT);
   pinMode(RIFSensor, INPUT);
@@ -147,6 +185,11 @@ void setup() {
 int aktivanSigurnosniSustav = 0;
 int poslano = false;
 void loop() {
+    if(WiFi.status() == WL_CONNECTED && provjeraVeze()) {
+      if (!Firebase.ready()) {
+        Serial.println("Prekinuta konekcija sa Firebase");
+        podesavanjeFirebase();
+      }
   if(Firebase.RTDB.getInt(&fbdo, "/Sensors/AktiviranSigurnosniSustav")){
         if(fbdo.dataType() == "int"){
           aktivanSigurnosniSustav = fbdo.intData();
@@ -154,7 +197,7 @@ void loop() {
         }
 if(aktivanSigurnosniSustav == 1) {
   if(digitalRead(RIFSensor) == HIGH && poslano == false) {
-    tone(buzzer2, 1000);
+    digitalWrite(buzzer2, LOW);
     Firebase.RTDB.setInt(&fbdo, "Sensors/SenzorPokreta",1);
     AlarmPokret =1;
     Firebase.RTDB.setInt(&fbdo, "Sensors/AlarmPokret",AlarmPokret);
@@ -172,7 +215,36 @@ if(aktivanSigurnosniSustav == 1) {
          }
         }
   if(AlarmPokret ==0){
-    noTone(buzzer2);
+    digitalWrite(buzzer2, HIGH);
     poslano = false;
   }
+    if(Firebase.RTDB.getInt(&fbdo, "/Sensors/AutomatskoSvjetlo")){
+        if(fbdo.dataType() == "int"){
+          AutomatskoSvjetlo = fbdo.intData();
+         }
+        }
+  if(AutomatskoSvjetlo == 0) {
+    int UpaljenoSvjetlo =0;
+ if(Firebase.RTDB.getInt(&fbdo, "/Sensors/UpaljenoSvjetlo")){
+        if(fbdo.dataType() == "int"){
+          UpaljenoSvjetlo = fbdo.intData();
+         }
+        }
+        if(UpaljenoSvjetlo ==1) {
+          analogWrite(svjetlo, 255);
+        }
+        else {
+          analogWrite(svjetlo, 0);
+        }
+  }
+  else {
+      bool trajanje = jeUpaljeno();
+      if(trajanje) {
+        analogWrite(svjetlo, 255);
+      }
+      else {
+        analogWrite(svjetlo, 0);
+      }
+  }
+    }
 }
