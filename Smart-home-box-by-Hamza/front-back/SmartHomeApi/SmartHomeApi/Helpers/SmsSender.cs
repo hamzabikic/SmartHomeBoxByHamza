@@ -9,13 +9,16 @@ namespace SmartHomeApi.Helpers
     public class SmsSender
     {
         private readonly MyDBContext db;
-        public SmsSender(MyDBContext _db)
+        private readonly AuthService auth;
+        public SmsSender(MyDBContext _db, AuthService _auth)
         {
             db = _db;
+            auth = _auth;
         }
         public async Task<bool> sendMessage(string message)
         {
-            Korisnik korisnik = db.Korisnici.First();
+            var prijavainfo = await auth.getInfo();
+            Korisnik korisnik = prijavainfo.Prijava.Korisnik;
             if (korisnik.SmsSlanje)
             {
                 var accountSid = "AC63cc1500ff6b56016386debfc187a369";

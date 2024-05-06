@@ -9,10 +9,11 @@ namespace SmartHomeApi.Data
         {
 
         }
+        public DbSet<Korisnik> Korisnici { get; set; }
         public DbSet<TemperaturaVlaznost> TemperatureVlaznosti { get; set; }
         public DbSet<CO2FireAlarm> CO2FireAlarmi { get; set; }
         public DbSet<SkeniraniPokret> SkeniraniPokreti { get; set; }
         public DbSet<Light> Lights { get; set; }
-        public DbSet<Korisnik> Korisnici { get; set; }
+        public DbSet<Prijava> Prijave { get; set; }
     }
 }

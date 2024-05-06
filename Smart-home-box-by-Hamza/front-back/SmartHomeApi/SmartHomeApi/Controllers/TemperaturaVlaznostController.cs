@@ -3,26 +3,32 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeApi.Data;
 using SmartHomeApi.Data.Tablice;
+using SmartHomeApi.Helpers;
 
 namespace SmartHomeApi.Controllers
 {
     [ApiController]
+    [Auth]
     [Route("[controller]/[action]")]
     public class TemperaturaVlaznostController
     {
         private readonly MyDBContext db;
-        public TemperaturaVlaznostController(MyDBContext _db)
+        private readonly AuthService auth;
+        public TemperaturaVlaznostController(MyDBContext _db, AuthService _auth)
         {
             db = _db;
+            auth = _auth;
         }
         [HttpPost]
-        public bool addInfo([FromBody] InfoRequest info)
+        public async Task<bool> addInfo([FromBody] InfoRequest info)
         {
+            var prijavaInfo = await auth.getInfo();
             var novi = new TemperaturaVlaznost
             {
                 DatumVrijeme = DateTime.Now,
                 Temperatura = info.Temperatura,
-                Vlaznost = info.Vlaznost
+                Vlaznost = info.Vlaznost, 
+                KorisnikId = prijavaInfo.Prijava.KorisnikId
             };
             db.TemperatureVlaznosti.Add(novi);
             db.SaveChanges();
@@ -31,7 +37,9 @@ namespace SmartHomeApi.Controllers
         [HttpGet]
         public async Task<InfoListResponse> getInfoByDate (DateTime datum)
         {
-            var lista = await db.TemperatureVlaznosti.Where(tv => tv.DatumVrijeme.Date == datum.Date)
+            var prijavaInfo = await auth.getInfo();
+            var lista = await db.TemperatureVlaznosti.Where(tv =>
+            tv.KorisnikId == prijavaInfo.Prijava.KorisnikId && tv.DatumVrijeme.Date == datum.Date)
                 .OrderByDescending(tv=> tv.DatumVrijeme).Select(
                 tv => new InfoResponse
                 {
@@ -48,8 +56,10 @@ namespace SmartHomeApi.Controllers
         [HttpGet]
         public async Task<InfoListResponse> getInfoLast7Days()
         {
+            var prijavaInfo = await auth.getInfo();
             var datum = DateTime.Now.AddDays(-7);
-            var lista = await db.TemperatureVlaznosti.Where(tv => tv.DatumVrijeme.Date >= datum.Date)
+            var lista = await db.TemperatureVlaznosti.Where(tv =>
+            tv.KorisnikId == prijavaInfo.Prijava.KorisnikId && tv.DatumVrijeme.Date >= datum.Date)
                 .OrderByDescending(tv => tv.DatumVrijeme).Select(
                 tv => new InfoResponse
                 {
@@ -65,8 +75,10 @@ namespace SmartHomeApi.Controllers
         [HttpGet]
         public async Task<InfoListResponse> getInfoLastMonth()
         {
+            var prijavaInfo = await auth.getInfo();
             var datum = DateTime.Now.AddDays(-30);
-            var lista = await db.TemperatureVlaznosti.Where(tv => tv.DatumVrijeme.Date >= datum.Date)
+            var lista = await db.TemperatureVlaznosti.Where(tv => 
+            tv.KorisnikId == prijavaInfo.Prijava.KorisnikId && tv.DatumVrijeme.Date >= datum.Date)
                 .OrderByDescending(tv => tv.DatumVrijeme).Select(
                 tv => new InfoResponse
                 {

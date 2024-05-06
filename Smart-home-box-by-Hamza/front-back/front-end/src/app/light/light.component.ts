@@ -1,27 +1,37 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {getDatabase, ref, get, set, child, update, remove} from 'firebase/database';
 import {initializeApp} from "firebase/app";
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
+import {AuthService} from "../Services/AuthService";
+import {LoginProvjera} from "../Services/LoginProvjera";
 @Component({
   selector: 'app-light',
   templateUrl: './light.component.html',
   styleUrls: ['./light.component.css']
 })
-export class LightComponent implements OnInit {
+export class LightComponent implements OnInit, OnDestroy {
   app = initializeApp(environment.firebaseConfig);
   prvoVrijeme :number =0;
   drugoVrijeme :number =0;
   automatskoSvjetlo = false;
   upaljenoSvjetlo = false;
   db:any;
-  constructor(private http :HttpClient) {
+  interval:any;
+  provjera:any;
+  constructor(private http :HttpClient ,private auth:AuthService, private login: LoginProvjera) {
     this.db = getDatabase();
   }
 
+  ngOnDestroy(): void {
+        clearInterval(this.interval);
+        clearInterval(this.provjera);
+    }
+
   async ngOnInit() {
     await this.ucitajPodatke();
-    setInterval(()=> {this.ucitajPodatke()}, 1000);
+    this.interval = setInterval(()=> {this.ucitajPodatke()}, 1000);
+    this.provjera = setInterval(async ()=> await this.login.provjeraPrijave() ,1000);
     await this.ucitajTajming();
   }
   async ucitajTajming() {
@@ -43,7 +53,7 @@ export class LightComponent implements OnInit {
    await this.ucitajPodatke();
   }
   ucitajPodatke () {
-    get(child(ref(this.db), "Sensors/")).then(
+    get(child(ref(this.db), `${this.auth.getId()}/`)).then(
       (snapshot: any) => {
         if (snapshot.exists()) {
           this.automatskoSvjetlo = snapshot.val().AutomatskoSvjetlo;
@@ -58,7 +68,7 @@ export class LightComponent implements OnInit {
   }
   automatskoPaljenje() {
     if(this.automatskoSvjetlo) {
-      update(ref(this.db, "Sensors/"), {
+      update(ref(this.db, `${this.auth.getId()}/`), {
         AutomatskoSvjetlo:1,
         UpaljenoSvjetlo:0
       }).then(() => {
@@ -69,7 +79,7 @@ export class LightComponent implements OnInit {
       this.upaljenoSvjetlo =false;
     }
     else {
-      update(ref(this.db, "Sensors/"), {
+      update(ref(this.db, `${this.auth.getId()}/`), {
         AutomatskoSvjetlo:0
       }).then(() => {
         console.log("Podaci uspjesno ucitani!");
@@ -80,7 +90,7 @@ export class LightComponent implements OnInit {
   }
   upaliSvjetlo() {
     if(this.upaljenoSvjetlo) {
-      update(ref(this.db, "Sensors/"), {
+      update(ref(this.db, `${this.auth.getId()}/`), {
         UpaljenoSvjetlo:1
       }).then(() => {
         console.log("Podaci uspjesno ucitani!");
@@ -89,7 +99,7 @@ export class LightComponent implements OnInit {
       });
     }
     else {
-        update(ref(this.db, "Sensors/"), {
+        update(ref(this.db, `${this.auth.getId()}/`), {
           UpaljenoSvjetlo:0
         }).then(() => {
           console.log("Podaci uspjesno ucitani!");

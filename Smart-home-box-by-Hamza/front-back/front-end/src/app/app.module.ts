@@ -5,11 +5,17 @@ import { AppComponent } from './app.component';
 import {FormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
 import { TemphumComponent } from './temphum/temphum.component';
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import { GasfireComponent } from './gasfire/gasfire.component';
 import { SecurityComponent } from './security/security.component';
 import { ProfileComponent } from './profile/profile.component';
 import { LightComponent } from './light/light.component';
+import { LoginComponent } from './login/login.component';
+import {AuthService} from "./Services/AuthService";
+import {MyHttpInterceptor} from "./Services/MyHttpInterceptor";
+import {ComponentsCanActivate} from "./Services/ComponentsCanActivate";
+import {LoginCanActivate} from "./Services/LoginCanActivate";
+import {LoginProvjera} from "./Services/LoginProvjera";
 
 @NgModule({
   declarations: [
@@ -18,22 +24,25 @@ import { LightComponent } from './light/light.component';
     GasfireComponent,
     SecurityComponent,
     ProfileComponent,
-    LightComponent
+    LightComponent,
+    LoginComponent
   ],
     imports: [
         BrowserModule,
         FormsModule,
       RouterModule.forRoot([
         {path:"", redirectTo:"profile", pathMatch:"full"},
-        {path:"temperaturehumidity", component:TemphumComponent},
-        {path:"gasfire", component:GasfireComponent},
-        {path:"security", component:SecurityComponent},
-        {path:"profile", component:ProfileComponent},
-        {path:"light", component:LightComponent}
+        {path:"temperaturehumidity", component:TemphumComponent, canActivate:[ComponentsCanActivate]},
+        {path:"gasfire", component:GasfireComponent, canActivate:[ComponentsCanActivate]},
+        {path:"security", component:SecurityComponent, canActivate:[ComponentsCanActivate]},
+        {path:"profile", component:ProfileComponent, canActivate:[ComponentsCanActivate]},
+        {path:"light", component:LightComponent, canActivate:[ComponentsCanActivate]},
+        {path:"login", component:LoginComponent , canActivate:[LoginCanActivate]}
       ]),
       HttpClientModule
     ],
-  providers: [],
+  providers: [AuthService, {provide:HTTP_INTERCEPTORS, multi:true, useClass:MyHttpInterceptor}, LoginCanActivate,
+  ComponentsCanActivate, LoginProvjera],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

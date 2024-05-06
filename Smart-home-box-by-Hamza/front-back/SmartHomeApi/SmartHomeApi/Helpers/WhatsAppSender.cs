@@ -9,15 +9,16 @@ namespace SmartHomeApi.Helpers
     public class WhatsAppSender
     {
         private readonly MyDBContext db;
-        public WhatsAppSender(MyDBContext _db)
+        private readonly AuthService auth;
+        public WhatsAppSender(MyDBContext _db, AuthService _auth)
         {
             db = _db;
+            auth = _auth;
         }
         public async Task<bool> sendMessage(string message)
         {
-            Korisnik korisnik = db.Korisnici.First();
-            if (korisnik.WhatsAppSlanje)
-            {
+            var prijavainfo = await auth.getInfo();
+            Korisnik korisnik = prijavainfo.Prijava.Korisnik;
                 var accountSid = "AC63cc1500ff6b56016386debfc187a369";
                 var authToken = "a552698078babdc40e90f6882dadb4b9";
                 TwilioClient.Init(accountSid, authToken);
@@ -36,10 +37,6 @@ namespace SmartHomeApi.Helpers
                     return false;
                 }
             }
-            else
-            {
-                return false;
-            }
         }
     }
-}
+

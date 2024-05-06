@@ -9,7 +9,7 @@
 #include "addons/RTDBHelper.h"
 
 #define WIFI_SSID "Bikic"
-#define WIFI_PASSWORD "buhotina"
+#define WIFI_PASSWORD "tabakera"
 
 #define API_KEY "AIzaSyAAeEudINps2xztymbj4Y0sqZfdAp-DWgo"
 
@@ -44,24 +44,18 @@ void posaljiRequest(int vrijednost, bool fire) {
     jsonDocument["gasValue"] = vrijednost;
     jsonDocument["fireDetected"] = fire;
 
-    // Serijalizacija JSON objekta
     String jsonString;
     serializeJson(jsonDocument, jsonString);
 
     http.begin(client, "http://smarthomeapi.p2347.app.fit.ba/GasFire/AddInfo"); // Koristimo begin sa WiFiClient objektom
     http.addHeader("Content-Type", "application/json");
+    http.addHeader("my-token", "xx2xx");
 
     int httpResponseCode = http.POST(jsonString);
 
-    if (httpResponseCode > 0) {
-      Serial.print("HTTP zahtjev uspješno izvršen, kod odgovora: ");
-      Serial.println(httpResponseCode);
+    if (httpResponseCode == 200) {
 
-      // Očekujemo bool vrijednost kao odgovor od servera
       bool responseBool = http.getString() == "true"; // Ako je odgovor "true", postavljamo responseBool na true, inače na false
-
-      Serial.print("Odgovor servera (bool): ");
-      Serial.println(responseBool);
       if(responseBool==false) {
         posaljiRequest(vrijednost,fire);
       }
@@ -127,17 +121,17 @@ void setup() {
   Serial.println(WiFi.localIP());
   Serial.println();
   podesavanjeFirebase();
-  // Postavljanje ugra?ene LED diode kao izlaznog
+
   pinMode(senzor, INPUT);
   pinMode(buzzer, OUTPUT);
   pinMode(button, INPUT);
   pinMode(fireSensor,INPUT);
-  Firebase.RTDB.setInt(&fbdo, "Sensors/AlarmCO2",0);
-  Firebase.RTDB.setInt(&fbdo, "Sensors/FireSensor",0);
+  Firebase.RTDB.setInt(&fbdo, "2/AlarmCO2",0);
+  Firebase.RTDB.setInt(&fbdo, "2/FireSensor",0);
 }
 void loop() {
   if(WiFi.status() == WL_CONNECTED && provjeraVeze()) {
-    if (!Firebase.ready()) {
+    while (!Firebase.ready()) {
       Serial.println("Prekinuta konekcija sa Firebase");
       podesavanjeFirebase();
     }
@@ -148,15 +142,15 @@ void loop() {
     poslano = false;
     }
   int vrijednost = analogRead(senzor);
-    if(vrijednost >500 && poslano == false) {
+    if(vrijednost >200 && poslano == false) {
     tone(buzzer, 1000);
     AlarmCO2 = 1;
     buttonSlanje =1;
-    Firebase.RTDB.setInt(&fbdo, "Sensors/AlarmCO2",AlarmCO2);
+    Firebase.RTDB.setInt(&fbdo, "2/AlarmCO2",AlarmCO2);
     posaljiRequest(vrijednost,false);
     poslano = true;
   }
-    Firebase.RTDB.setInt(&fbdo, "Sensors/CO2", vrijednost);
+    Firebase.RTDB.setInt(&fbdo, "2/CO2", vrijednost);
      if(digitalRead(button) ==0) {
     noTone(buzzer);
     buttonSlanje =0;
@@ -167,8 +161,8 @@ void loop() {
     AlarmCO2 = 1;
     fireVrijednost = 1;
     buttonSlanje =1;
-    Firebase.RTDB.setInt(&fbdo, "Sensors/FireSensor", fireVrijednost);
-    Firebase.RTDB.setInt(&fbdo, "Sensors/AlarmCO2",AlarmCO2);
+    Firebase.RTDB.setInt(&fbdo, "2/FireSensor", fireVrijednost);
+    Firebase.RTDB.setInt(&fbdo, "2/AlarmCO2",AlarmCO2);
     posaljiRequest(vrijednost, true);
     poslano = true;
   }
@@ -177,7 +171,7 @@ void loop() {
     buttonSlanje =0;
     poslano = false;
     }
-    if(Firebase.RTDB.getInt(&fbdo, "/Sensors/AlarmCO2")){
+    if(Firebase.RTDB.getInt(&fbdo, "/2/AlarmCO2")){
         if(fbdo.dataType() == "int"){
           AlarmCO2 = fbdo.intData();
          }
@@ -196,8 +190,8 @@ void loop() {
      if(buttonSlanje == 0) {
     AlarmCO2 =0;
     fireVrijednost =0;
-    Firebase.RTDB.setInt(&fbdo, "Sensors/AlarmCO2",AlarmCO2);
-    Firebase.RTDB.setInt(&fbdo, "Sensors/FireSensor", fireVrijednost);
+    Firebase.RTDB.setInt(&fbdo, "2/AlarmCO2",AlarmCO2);
+    Firebase.RTDB.setInt(&fbdo, "2/FireSensor", fireVrijednost);
   }
 }
 }

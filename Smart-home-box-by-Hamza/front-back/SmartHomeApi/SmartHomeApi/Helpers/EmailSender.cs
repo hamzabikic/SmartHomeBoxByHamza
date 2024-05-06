@@ -11,9 +11,11 @@ namespace SmartHomeApi.Helpers
     {
         private readonly SmtpClient smtpClient;
         private readonly MyDBContext db;
-        public EmailSender (MyDBContext _db)
+        private readonly AuthService auth;
+        public EmailSender (MyDBContext _db, AuthService _auth)
         {
             db = _db;
+            auth = _auth;
             smtpClient = new SmtpClient ("smtp.gmail.com")
             {
                 Port = 587,
@@ -23,7 +25,8 @@ namespace SmartHomeApi.Helpers
         }
         public async Task<bool> sendEmail(string message)
         {
-            Korisnik korisnik = db.Korisnici.First();
+            var prijavainfo = await auth.getInfo();
+            Korisnik korisnik = prijavainfo.Prijava.Korisnik;
             if (korisnik.EmailSlanje)
             {
                 try

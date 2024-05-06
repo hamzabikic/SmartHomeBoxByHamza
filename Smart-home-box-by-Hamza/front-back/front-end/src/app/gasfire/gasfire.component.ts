@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {initializeApp} from "firebase/app";
 import {environment} from "../../environments/environment";
 import {gasfire, gasfirelista, TemperaturaVlaznost, temphumlista} from "../Klase/Klase";
 import {HttpClient} from "@angular/common/http";
 import {child, get, getDatabase, ref, update} from "firebase/database";
+import {AuthService} from "../Services/AuthService";
+import {LoginProvjera} from "../Services/LoginProvjera";
 
 @Component({
   selector: 'app-gasfire',
   templateUrl: './gasfire.component.html',
   styleUrls: ['./gasfire.component.css']
 })
-export class GasfireComponent implements OnInit {
+export class GasfireComponent implements OnInit, OnDestroy {
   gasvalue ="";
   alarm = "";
   fire="";
@@ -20,15 +22,23 @@ export class GasfireComponent implements OnInit {
   historyLista :gasfire[] = [];
   datum:string ="";
   dropDown = "1";
-  constructor(private http: HttpClient) {
+  interval: any;
+  provjera:any;
+  constructor(private http: HttpClient, private auth: AuthService, private login: LoginProvjera) {
     this.db = getDatabase();
   }
+
+  ngOnDestroy() {
+       clearInterval(this.interval);
+       clearInterval(this.provjera);
+    }
 
   async ngOnInit() {
     this.setujDatum();
     await this.ucitajPodatke();
     await this.ucitajHistory();
-    setInterval(()=> {this.ucitajPodatke();},1000);
+    this.interval = setInterval(()=> {this.ucitajPodatke();},1000);
+    this.provjera = setInterval(async ()=> await this.login.provjeraPrijave(),1000 );
   }
   setujDatum() {
     this.datum=new Date().toISOString().split('T')[0];
@@ -65,7 +75,7 @@ export class GasfireComponent implements OnInit {
     }
   }
   ucitajPodatke () {
-    get(child(ref(this.db), "Sensors/")).then(
+    get(child(ref(this.db), `${this.auth.getId()}/`)).then(
       (snapshot: any) => {
         if (snapshot.exists()) {
           this.gasvalue= String(snapshot.val().CO2);
@@ -90,7 +100,7 @@ export class GasfireComponent implements OnInit {
     });
   }
   gascss() {
-    if (parseInt(this.gasvalue) < 500) {
+    if (parseInt(this.gasvalue) <= 200) {
       return {color: "green", fontWeight: "bolder"};
     } else {
       return {color: "red", fontWeight: "bolder"};
@@ -111,7 +121,7 @@ export class GasfireComponent implements OnInit {
     }
   }
   ugasiAlarm() {
-    update(ref(this.db, "Sensors/"), {
+    update(ref(this.db, `${this.auth.getId()}/`), {
       AlarmCO2: 0,
       FireSensor: 0
     }).then(() => {

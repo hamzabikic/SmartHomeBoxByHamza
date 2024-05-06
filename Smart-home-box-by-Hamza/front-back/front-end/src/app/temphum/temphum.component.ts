@@ -1,16 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {getDatabase, ref, get, set, child, update, remove} from 'firebase/database';
 import {initializeApp} from "firebase/app";
 import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {TemperaturaVlaznost, temphumlista} from "../Klase/Klase";
+import {AuthService} from "../Services/AuthService";
+import {LoginComponent} from "../login/login.component";
+import {LoginProvjera} from "../Services/LoginProvjera";
 
 @Component({
   selector: 'app-temphum',
   templateUrl: './temphum.component.html',
   styleUrls: ['./temphum.component.css']
 })
-export class TemphumComponent implements OnInit {
+export class TemphumComponent implements OnInit, OnDestroy {
   app = initializeApp(environment.firebaseConfig);
   temperatura ="";
   humidity ="";
@@ -19,15 +22,24 @@ export class TemphumComponent implements OnInit {
   historyLista :TemperaturaVlaznost[] = [];
   datum:string ="";
   dropDown = "1";
-  constructor(private http: HttpClient) {
+  interval: any;
+  provjera:any;
+  constructor(private http: HttpClient, private auth: AuthService, private login: LoginProvjera) {
     this.db = getDatabase();
+
   }
+
+  ngOnDestroy(): void {
+        clearInterval(this.interval);
+        clearInterval(this.provjera);
+    }
 
   async ngOnInit() {
     this.setujDatum();
     await this.ucitajPodatke();
     await this.ucitajHistory();
-    setInterval(()=> {this.ucitajPodatke()},1000);
+    this.interval = setInterval(()=> {this.ucitajPodatke()},1000);
+    this.provjera = setInterval(async ()=> await this.login.provjeraPrijave(),1000 );
   }
   setujDatum() {
     this.datum=new Date().toISOString().split('T')[0];
@@ -64,7 +76,7 @@ export class TemphumComponent implements OnInit {
     }
   }
   ucitajPodatke () {
-    get(child(ref(this.db), "Sensors/")).then(
+    get(child(ref(this.db), `${this.auth.getId()}/`)).then(
       (snapshot: any) => {
         if (snapshot.exists()) {
           this.temperatura = String(snapshot.val().Temperature);

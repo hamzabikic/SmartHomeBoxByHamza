@@ -17,9 +17,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<MyDBContext>(options => options.UseSqlServer(config.GetConnectionString("db1")));
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<WhatsAppSender>();
 builder.Services.AddTransient<SmsSender>();
 builder.Services.AddTransient<EmailSender>();
+builder.Services.AddTransient<AuthService>();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo

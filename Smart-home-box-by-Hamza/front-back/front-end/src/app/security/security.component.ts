@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {initializeApp} from "firebase/app";
 import {environment} from "../../environments/environment";
 import {gasfire, gasfirelista, Pokret, PokretiResponse} from "../Klase/Klase";
 import {HttpClient} from "@angular/common/http";
 import {child, get, getDatabase, ref, update} from "firebase/database";
+import {AuthService} from "../Services/AuthService";
+import {LoginProvjera} from "../Services/LoginProvjera";
 
 @Component({
   selector: 'app-security',
   templateUrl: './security.component.html',
   styleUrls: ['./security.component.css']
 })
-export class SecurityComponent implements OnInit {
+export class SecurityComponent implements OnInit, OnDestroy {
 
   aktivirajSigurnosni = true;
   app = initializeApp(environment.firebaseConfig);
@@ -20,15 +22,24 @@ export class SecurityComponent implements OnInit {
   datum:string ="";
   dropDown = "1";
   movement = "";
-  constructor(private http: HttpClient) {
+  interval:any;
+  provjera:any;
+  constructor(private http: HttpClient, private auth:AuthService, private login: LoginProvjera) {
     this.db = getDatabase();
   }
+
+  ngOnDestroy(): void {
+        clearInterval(this.interval);
+        clearInterval(this.provjera);
+    }
 
   async ngOnInit() {
     this.setujDatum();
     await this.ucitajSenzore();
     await this.ucitajHistory();
-    setInterval(()=> {this.ucitajSenzore();},1000);
+    this.interval = setInterval(()=> {this.ucitajSenzore();},1000);
+    this.provjera = setInterval(async ()=> await this.login.provjeraPrijave(),1000 );
+
   }
   setujDatum() {
     this.datum=new Date().toISOString().split('T')[0];
@@ -66,7 +77,7 @@ export class SecurityComponent implements OnInit {
   }
   aktivirajSigurnosniSustav() {
     if(this.aktivirajSigurnosni == false) {
-      update(ref(this.db, "Sensors/"), {
+      update(ref(this.db, `${this.auth.getId()}/`), {
         AktiviranSigurnosniSustav: 1
       }).then(() => {
         console.log("Podaci uspjesno ucitani!");
@@ -75,7 +86,7 @@ export class SecurityComponent implements OnInit {
       });
     }
     else {
-      update(ref(this.db, "Sensors/"), {
+      update(ref(this.db, `${this.auth.getId()}/`), {
         AktiviranSigurnosniSustav: 0,
         SenzorPokreta:0,
         AlarmPokret:0
@@ -88,7 +99,7 @@ export class SecurityComponent implements OnInit {
     }
   }
   ucitajSenzore() {
-    get(child(ref(this.db), "Sensors/")).then(
+    get(child(ref(this.db), `${this.auth.getId()}/`)).then(
       (snapshot: any) => {
         if (snapshot.exists()) {
           if (snapshot.val().AktiviranSigurnosniSustav == 1) {
@@ -110,7 +121,7 @@ export class SecurityComponent implements OnInit {
     });
   }
   ugasiAlarm() {
-    update(ref(this.db, "Sensors/"), {
+    update(ref(this.db, `${this.auth.getId()}/`), {
       SenzorPokreta:0,
       AlarmPokret:0
     }).then(() => {

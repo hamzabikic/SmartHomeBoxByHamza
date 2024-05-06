@@ -9,8 +9,30 @@ p{
   margin:0;
   margin-top:10px;}
 #note {
-  height:100px;
+  height:95px;
   overflow: scroll;
   background-color:darkred;
   color:white;
+  clear:left;
 }
+#podaci {
+  width:50%;
+  float:left;
+  height:420px;
+}
+#promjenaLozinke {
+  width:50%;
+  height:420px;
+  float:left;
+}
+.form-row {
+  width:90%;
+}
+.form-group {
+  width:90%;
+}
+#odjava-btn {
+  display:block;
+  font-weight: bold;
+}
+

@@ -9,7 +9,7 @@
 #include "addons/RTDBHelper.h"
 
 #define WIFI_SSID "Bikic"
-#define WIFI_PASSWORD "buhotina"
+#define WIFI_PASSWORD "tabakera"
 
 #define API_KEY "AIzaSyAAeEudINps2xztymbj4Y0sqZfdAp-DWgo"
 
@@ -68,6 +68,7 @@ void slanjeTemperature(int temperatura, int vlaznost) {
 
     http.begin(client, "http://smarthomeapi.p2347.app.fit.ba/TemperaturaVlaznost/addInfo"); // Koristimo begin sa WiFiClient objektom
     http.addHeader("Content-Type", "application/json");
+    http.addHeader("my-token", "xx2xx");
 
     int httpResponseCode = http.POST(jsonString);
 
@@ -88,6 +89,7 @@ void slanjeTemperature(int temperatura, int vlaznost) {
 void slanjePokreta() {
   http.begin(client, "http://smarthomeapi.p2347.app.fit.ba/SkeniraniPokreti/addPokret"); // Koristimo begin sa WiFiClient objektom
   http.addHeader("Content-Type", "application/json");
+  http.addHeader("my-token", "xx2xx");
 
   int httpResponseCode = http.POST("{}");
 
@@ -104,6 +106,7 @@ void slanjePokreta() {
 bool jeUpaljeno () {
   http.begin(client, "http://smarthomeapi.p2347.app.fit.ba/Light/jeUpaljeno"); // Koristimo begin sa WiFiClient objektom
   http.addHeader("Content-Type", "application/json");
+  http.addHeader("my-token", "xx2xx");
 
   int httpResponseCode = http.GET();
 
@@ -179,18 +182,18 @@ void setup() {
   pinMode(buzzer2, OUTPUT);
   pinMode(RIFSensor, INPUT);
   pinMode(temperatureSensor,INPUT);
-  Firebase.RTDB.setInt(&fbdo, "Sensors/SenzorPokreta",0);
-  Firebase.RTDB.setInt(&fbdo, "Sensors/AlarmPokret", 0);
+  Firebase.RTDB.setInt(&fbdo, "2/SenzorPokreta",0);
+  Firebase.RTDB.setInt(&fbdo, "2/AlarmPokret", 0);
 }
 int aktivanSigurnosniSustav = 0;
 int poslano = false;
 void loop() {
     if(WiFi.status() == WL_CONNECTED && provjeraVeze()) {
-      if (!Firebase.ready()) {
+      while (!Firebase.ready()) {
         Serial.println("Prekinuta konekcija sa Firebase");
         podesavanjeFirebase();
       }
-  if(Firebase.RTDB.getInt(&fbdo, "/Sensors/AktiviranSigurnosniSustav")){
+  if(Firebase.RTDB.getInt(&fbdo, "/2/AktiviranSigurnosniSustav")){
         if(fbdo.dataType() == "int"){
           aktivanSigurnosniSustav = fbdo.intData();
          }
@@ -198,18 +201,18 @@ void loop() {
 if(aktivanSigurnosniSustav == 1) {
   if(digitalRead(RIFSensor) == HIGH && poslano == false) {
     digitalWrite(buzzer2, LOW);
-    Firebase.RTDB.setInt(&fbdo, "Sensors/SenzorPokreta",1);
+    Firebase.RTDB.setInt(&fbdo, "2/SenzorPokreta",1);
     AlarmPokret =1;
-    Firebase.RTDB.setInt(&fbdo, "Sensors/AlarmPokret",AlarmPokret);
+    Firebase.RTDB.setInt(&fbdo, "2/AlarmPokret",AlarmPokret);
     slanjePokreta();
     poslano = true;
   } 
   }
   DHT.read(temperatureSensor);
-  Firebase.RTDB.setInt(&fbdo, "Sensors/Temperature", DHT.temperature);
-  Firebase.RTDB.setInt(&fbdo, "Sensors/Humidity", DHT.humidity);
+  Firebase.RTDB.setInt(&fbdo, "2/Temperature", DHT.temperature);
+  Firebase.RTDB.setInt(&fbdo, "2/Humidity", DHT.humidity);
   slanjeTemperature(DHT.temperature, DHT.humidity);
-  if(Firebase.RTDB.getInt(&fbdo, "/Sensors/AlarmPokret")){
+  if(Firebase.RTDB.getInt(&fbdo, "/2/AlarmPokret")){
         if(fbdo.dataType() == "int"){
           AlarmPokret = fbdo.intData();
          }
@@ -218,14 +221,14 @@ if(aktivanSigurnosniSustav == 1) {
     digitalWrite(buzzer2, HIGH);
     poslano = false;
   }
-    if(Firebase.RTDB.getInt(&fbdo, "/Sensors/AutomatskoSvjetlo")){
+    if(Firebase.RTDB.getInt(&fbdo, "/2/AutomatskoSvjetlo")){
         if(fbdo.dataType() == "int"){
           AutomatskoSvjetlo = fbdo.intData();
          }
         }
   if(AutomatskoSvjetlo == 0) {
     int UpaljenoSvjetlo =0;
- if(Firebase.RTDB.getInt(&fbdo, "/Sensors/UpaljenoSvjetlo")){
+ if(Firebase.RTDB.getInt(&fbdo, "/2/UpaljenoSvjetlo")){
         if(fbdo.dataType() == "int"){
           UpaljenoSvjetlo = fbdo.intData();
          }

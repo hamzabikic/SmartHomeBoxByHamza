@@ -10,6 +10,7 @@ using System.Security.Cryptography.X509Certificates;
 namespace SmartHomeApi.Controllers
 {
     [ApiController]
+    [Auth]
     [Route("[controller]/[action]")]
     public class GasFireController
     {
@@ -17,19 +18,24 @@ namespace SmartHomeApi.Controllers
         private readonly WhatsAppSender sender;
         private readonly SmsSender smsSender;
         private readonly EmailSender emailSender;
+        private readonly AuthService auth;
         public GasFireController(MyDBContext _db, WhatsAppSender _sender, SmsSender _smsSender,
-            EmailSender _emailsender)
+            EmailSender _emailsender, AuthService _auth)
         {
             db = _db;
             sender = _sender;
             smsSender = _smsSender;
             emailSender = _emailsender;
+            auth = _auth;
+           
         }
         [HttpPost]
         public async Task<bool> AddInfo(AddInfoRequest req)
         {
+            var prijavaInfo = await auth.getInfo();
             var novi = new CO2FireAlarm
-            { DatumVrijeme = DateTime.Now, CO2Value = req.GasValue, FireDetected = req.FireDetected };
+            { DatumVrijeme = DateTime.Now, CO2Value = req.GasValue, FireDetected = req.FireDetected,
+            KorisnikId = prijavaInfo.Prijava.KorisnikId};
             db.CO2FireAlarmi.Add(novi);
             db.SaveChanges();
             var poruka = "";
@@ -49,7 +55,9 @@ namespace SmartHomeApi.Controllers
         [HttpGet]
         public async Task<GasFireListResponse> getInfoAll ()
         {
-            var lista = await db.CO2FireAlarmi.OrderByDescending(a=> a.DatumVrijeme).Select(
+            var prijavaInfo = await auth.getInfo();
+            var lista = await db.CO2FireAlarmi.Where(a=> a.KorisnikId == prijavaInfo.Prijava.KorisnikId).
+                OrderByDescending(a=> a.DatumVrijeme).Select(
                 a => new GasFireResponse
                 {
                     Id = a.Id,
@@ -63,7 +71,9 @@ namespace SmartHomeApi.Controllers
         [HttpGet]
         public async Task<GasFireListResponse> getInfoByDate([FromQuery] DateTime datum)
         {
-            var lista = await db.CO2FireAlarmi.Where(a=> a.DatumVrijeme.Date == datum.Date)
+            var prijavaInfo = await auth.getInfo();
+            var lista = await db.CO2FireAlarmi.Where(a=> a.KorisnikId == prijavaInfo.Prijava.KorisnikId &&
+            a.DatumVrijeme.Date == datum.Date)
                 .OrderByDescending(a => a.DatumVrijeme).Select(
                 a => new GasFireResponse
                 {
@@ -78,8 +88,10 @@ namespace SmartHomeApi.Controllers
         [HttpGet]
         public async Task<GasFireListResponse> getInfoLast7Days()
         {
+            var prijavaInfo = await auth.getInfo();
             var datum = DateTime.Now.AddDays(-7);
-            var lista = await db.CO2FireAlarmi.Where(a => a.DatumVrijeme.Date >= datum.Date)
+            var lista = await db.CO2FireAlarmi.Where(a => a.KorisnikId == prijavaInfo.Prijava.KorisnikId &&
+            a.DatumVrijeme.Date >= datum.Date)
                 .OrderByDescending(a => a.DatumVrijeme).Select(
                 a => new GasFireResponse
                 {
@@ -94,8 +106,10 @@ namespace SmartHomeApi.Controllers
         [HttpGet]
         public async Task<GasFireListResponse> getInfoLastMonth()
         {
+            var prijavaInfo = await auth.getInfo();
             var datum = DateTime.Now.AddDays(-30);
-            var lista = await db.CO2FireAlarmi.Where(a => a.DatumVrijeme.Date >= datum.Date)
+            var lista = await db.CO2FireAlarmi.Where(a => a.KorisnikId == prijavaInfo.Prijava.KorisnikId &&
+            a.DatumVrijeme.Date >= datum.Date)
                 .OrderByDescending(a => a.DatumVrijeme).Select(
                 a => new GasFireResponse
                 {
@@ -112,6 +126,8 @@ namespace SmartHomeApi.Controllers
         {
             CO2FireAlarm value = await db.CO2FireAlarmi.FindAsync(id);
             if (value == null) return false;
+            var prijavaInfo = await auth.getInfo();
+            if (value.KorisnikId != prijavaInfo.Prijava.KorisnikId) return false;
             db.CO2FireAlarmi.Remove(value);
             db.SaveChanges();
             return true;

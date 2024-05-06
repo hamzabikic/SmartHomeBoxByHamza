@@ -6,6 +6,9 @@ namespace SmartHomeApi.Data.Tablice
     public class Light
     {
         public int Id { get; set; }
+        [ForeignKey(nameof(Korisnik))]
+        public int KorisnikId { get; set; }
+        public Korisnik Korisnik { get; set; }
         public TimeSpan Pocetak { get; set; }
         public TimeSpan Kraj { get; set; }
     }
