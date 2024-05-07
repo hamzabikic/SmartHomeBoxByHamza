@@ -34,15 +34,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
   async posaljiPodatke() {
     this.moguce_slanje2 = false;
-    let poslano = await
-      this.http.post<boolean>("https://smarthomeapi.p2347.app.fit.ba/editujKorisnika",this.korisnik).toPromise();
-    if(poslano) {
+    let res = await
+      this.http.post("https://smarthomeapi.p2347.app.fit.ba/editujKorisnika",this.korisnik).toPromise();
+    // @ts-ignore
+    if(res.editovan) {
       alert("Success upload");
       await this.ucitajPodatke();
       this.moguce_slanje2 = true;
     }
     else {
-      alert("Error");
+      // @ts-ignore
+      alert(res.greska);
       this.moguce_slanje2 = true;
     }
   }
@@ -52,6 +54,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     if(res) {
       localStorage.removeItem("my-token");
       this.router.navigate(["/login"]);
+      this.moguce_slanje3 = true;
       return;
     }
     alert("Unsuccessful logout!");

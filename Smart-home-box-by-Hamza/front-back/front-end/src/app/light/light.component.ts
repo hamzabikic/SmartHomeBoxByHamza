@@ -1,10 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {getDatabase, ref, get, set, child, update, remove} from 'firebase/database';
 import {initializeApp} from "firebase/app";
-import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {AuthService} from "../Services/AuthService";
 import {LoginProvjera} from "../Services/LoginProvjera";
+import {environment} from "../../environments/environment.prod";
 @Component({
   selector: 'app-light',
   templateUrl: './light.component.html',

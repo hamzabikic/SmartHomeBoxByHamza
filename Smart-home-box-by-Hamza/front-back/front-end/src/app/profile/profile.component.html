@@ -53,7 +53,8 @@
       </label>
     </div>
     <button [disabled] ="!moguce_slanje!" (click)="promijeniSifru()" type="submit" class="btn btn-primary">Change your password</button>
-    <button id="odjava-btn" (click)="odjavise()" class="btn btn-warning">Log out</button>
+    <button [disabled]="!moguce_slanje3" id="odjava-btn" (click)="odjavise()" class="btn btn-warning">Log me out</button>
+    <a routerLink="/applications" style="display:block; margin-top:10px;">Where I am logged in?</a>
   </div>
   <p id="note">Note: You start receiving notifications for 24 hours on WhatsApp of your entered phone number
     by sending the message 'join wind-explore' to the phone number +14155238886. By sending any message in the chat

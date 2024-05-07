@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {initializeApp} from "firebase/app";
-import {environment} from "../../environments/environment";
 import {gasfire, gasfirelista, Pokret, PokretiResponse} from "../Klase/Klase";
 import {HttpClient} from "@angular/common/http";
 import {child, get, getDatabase, ref, update} from "firebase/database";
 import {AuthService} from "../Services/AuthService";
 import {LoginProvjera} from "../Services/LoginProvjera";
+import {environment} from "../../environments/environment.prod";
 
 @Component({
   selector: 'app-security',

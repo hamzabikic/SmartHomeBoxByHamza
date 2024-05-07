@@ -30,5 +30,12 @@ export class AuthService {
   }
   return "";
   }
+  getPrijavaId ():number{
+    if (this.jeLogiran()) {
+      let obj = JSON.parse(localStorage.getItem("my-token")!);
+      return obj.id;
+    }
+    return 0;
+  }
 
 }

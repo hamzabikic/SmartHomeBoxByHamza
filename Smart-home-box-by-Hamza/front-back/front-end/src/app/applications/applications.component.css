@@ -1,0 +1,15 @@
+#sve {
+  padding:10px;
+  box-sizing: border-box;
+}
+h4 {
+  margin-bottom:20px;
+}
+#tabela {
+  height:480px;
+  overflow: scroll;
+}
+#brisanje {
+  padding:7px;
+  font-size:14px;
+}

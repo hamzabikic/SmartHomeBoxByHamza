@@ -1,12 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {getDatabase, ref, get, set, child, update, remove} from 'firebase/database';
 import {initializeApp} from "firebase/app";
-import {environment} from "../../environments/environment";
 import {HttpClient} from "@angular/common/http";
 import {TemperaturaVlaznost, temphumlista} from "../Klase/Klase";
 import {AuthService} from "../Services/AuthService";
 import {LoginComponent} from "../login/login.component";
 import {LoginProvjera} from "../Services/LoginProvjera";
+import {environment} from "../../environments/environment.prod";
 
 @Component({
   selector: 'app-temphum',

@@ -16,6 +16,8 @@ import {MyHttpInterceptor} from "./Services/MyHttpInterceptor";
 import {ComponentsCanActivate} from "./Services/ComponentsCanActivate";
 import {LoginCanActivate} from "./Services/LoginCanActivate";
 import {LoginProvjera} from "./Services/LoginProvjera";
+import { PasswordComponent } from './password/password.component';
+import { ApplicationsComponent } from './applications/applications.component';
 
 @NgModule({
   declarations: [
@@ -25,20 +27,24 @@ import {LoginProvjera} from "./Services/LoginProvjera";
     SecurityComponent,
     ProfileComponent,
     LightComponent,
-    LoginComponent
+    LoginComponent,
+    PasswordComponent,
+    ApplicationsComponent
   ],
     imports: [
         BrowserModule,
         FormsModule,
       RouterModule.forRoot([
-        {path:"", redirectTo:"profile", pathMatch:"full"},
         {path:"temperaturehumidity", component:TemphumComponent, canActivate:[ComponentsCanActivate]},
         {path:"gasfire", component:GasfireComponent, canActivate:[ComponentsCanActivate]},
         {path:"security", component:SecurityComponent, canActivate:[ComponentsCanActivate]},
         {path:"profile", component:ProfileComponent, canActivate:[ComponentsCanActivate]},
         {path:"light", component:LightComponent, canActivate:[ComponentsCanActivate]},
-        {path:"login", component:LoginComponent , canActivate:[LoginCanActivate]}
-      ]),
+        {path:"login", component:LoginComponent , canActivate:[LoginCanActivate]},
+        {path:"password", component:PasswordComponent, canActivate:[LoginCanActivate]},
+        {path:"applications", component:ApplicationsComponent, canActivate:[ComponentsCanActivate]},
+        {path:"**", redirectTo:"profile", pathMatch:"full"}
+      ],{ useHash: true }),
       HttpClientModule
     ],
   providers: [AuthService, {provide:HTTP_INTERCEPTORS, multi:true, useClass:MyHttpInterceptor}, LoginCanActivate,

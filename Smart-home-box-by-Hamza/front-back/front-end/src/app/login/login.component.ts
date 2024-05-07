@@ -28,7 +28,7 @@ export class LoginComponent implements OnInit {
       // @ts-ignore
       localStorage.setItem("my-token", JSON.stringify(res.prijava));
       this.moguce_slanje= true;
-      this.router.navigate(["/gasfire"]);
+      this.router.navigate([""]);
       return;
     }
     alert("Incorrect data!");

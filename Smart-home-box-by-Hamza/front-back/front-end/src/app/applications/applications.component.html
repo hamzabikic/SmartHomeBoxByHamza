@@ -1,0 +1,23 @@
+<div id="sve">
+<h5>Devices on which you are logged</h5>
+<div id="tabela">
+  <table class="table table-sm">
+    <thead>
+    <tr>
+      <th class="table-info" scope="col">IP Address</th>
+      <th class="table-info" scope="col">Date</th>
+      <th class="table-info" scope="col">Time</th>
+      <th class="table-info" scope="col">Log out</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let x of prijave">
+      <td class="table-primary">{{x.ipAdresa}}</td>
+      <td class="table-primary">{{x.datum}}</td>
+      <td class="table-primary">{{x.vrijeme}}</td>
+      <td class="table-primary"><button id="brisanje" [disabled]="x.jeUredjaj || x.prijavaId == auth.getPrijavaId() || !moguce_slanje " id="brisanje" (click)="obrisiPrijavu(x.prijavaId)" class="btn btn-danger">Log out</button></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</div>
