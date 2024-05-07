@@ -5,6 +5,7 @@ using SmartHomeApi.Data;
 using SmartHomeApi.Data.Tablice;
 using SmartHomeApi.Helpers;
 using System.ComponentModel;
+using System.Security.Cryptography;
 
 namespace SmartHomeApi.Controllers
 {
@@ -15,11 +16,14 @@ namespace SmartHomeApi.Controllers
         private readonly MyDBContext db;
         private readonly IHttpContextAccessor context;
         private readonly AuthService auth;
-        public KorisnikController (MyDBContext _db, IHttpContextAccessor _context, AuthService _auth)
+        private readonly EmailSender emailSender;
+        public KorisnikController (MyDBContext _db, IHttpContextAccessor _context, AuthService _auth,
+            EmailSender _emailSender)
         {
             db = _db;
             context = _context;
             auth = _auth;
+            emailSender = _emailSender;
         }
         [HttpPost]
         private void dodajKorisnika ()
@@ -35,10 +39,30 @@ namespace SmartHomeApi.Controllers
             db.SaveChanges();
         }
         [HttpPost]
-        public async Task<bool> editujKorisnika(KorisnikEdit edit)
+        public async Task<KorisnikEditResponse> editujKorisnika(KorisnikEdit edit)
         {
             var prijavainfo = await auth.getInfo();
-            if (!prijavainfo.jeLogiran) return false;
+            if (!prijavainfo.jeLogiran) return new KorisnikEditResponse
+            {
+                Editovan = false,
+                Greska = "You don't have permission!"
+            };
+            if(await db.Korisnici.Where(k=> k.Id != prijavainfo.Prijava.KorisnikId && k.Email == edit.Email).AnyAsync())
+            {
+                return new KorisnikEditResponse
+                {
+                    Editovan = false,
+                    Greska = "The email already exists in the system!"
+                };
+            }
+            if (await db.Korisnici.Where(k => k.Id != prijavainfo.Prijava.KorisnikId && k.BrojTelefona == edit.Telefon).AnyAsync())
+            {
+                return new KorisnikEditResponse
+                {
+                    Editovan = false,
+                    Greska = "The phone number already exists in the system!"
+                };
+            }
             var korisnik = await db.Korisnici.FindAsync(prijavainfo.Prijava.KorisnikId);
             korisnik.Ime = edit.Ime;
             korisnik.Prezime = edit.Prezime;
@@ -46,6 +70,58 @@ namespace SmartHomeApi.Controllers
             korisnik.BrojTelefona = edit.Telefon;
             korisnik.SmsSlanje = edit.SmsSlanje;
             korisnik.EmailSlanje = edit.EmailSlanje;
+            db.SaveChanges();
+            return new KorisnikEditResponse
+            {
+                Editovan = true,
+                Greska = ""
+            };
+        }
+        [HttpPost]
+        public async Task<KorisnikEditResponse> generisiNovuLozinku(PasswordChangeReq req)
+        {
+            var korisnik = await db.Korisnici.Where(k => k.Email == req.Email).FirstOrDefaultAsync();
+            if(korisnik == null)
+            {
+                return new KorisnikEditResponse { Editovan = false, Greska = "The email doesn't exist in the system!" };
+            }
+            var lozinka = PasswordGenerator.GenerisiLozinku();
+            if (await emailSender.sendPassword(korisnik.Email, lozinka))
+            {
+                korisnik.Password = lozinka;
+                db.SaveChanges();
+                return new KorisnikEditResponse { Editovan = true, Greska = "" };
+            }
+            return new KorisnikEditResponse { Editovan = false, Greska = "Password change failed!" };
+        }
+        [HttpGet]
+        public async Task<List<PrijavaList>> getPrijave ()
+        {
+            var prijavainfo = await auth.getInfo();
+            if (!prijavainfo.jeLogiran) throw new Exception("Nemate pravo pristupa!");
+            return await db.Prijave.Where(p => p.KorisnikId == prijavainfo.Prijava.KorisnikId &&
+            !p.JeUredjaj).Select(
+                p => new PrijavaList
+                {
+                    PrijavaId = p.Id,
+                    Datum = p.DatumVrijeme.Date.ToString(),
+                    Vrijeme = p.DatumVrijeme.TimeOfDay.Hours.ToString() 
+                    +":"+p.DatumVrijeme.TimeOfDay.Minutes.ToString(),
+                    IpAdresa = p.IpAdresa
+                })
+            .ToListAsync();
+        }
+        [HttpGet]
+        public async Task<bool> odjaviUredjaj([FromQuery] int id)
+        {
+            var prijavainfo = await auth.getInfo();
+            if (!prijavainfo.jeLogiran) throw new Exception("Nemate pravo pristupa!");
+            if (id == prijavainfo.Prijava.Id) return false;
+            var prijava = await db.Prijave.FindAsync(id);
+            if (prijava == null) return false;
+            if (prijava.JeUredjaj) return false;
+            if(prijava.KorisnikId != prijavainfo.Prijava.KorisnikId) throw new Exception("Nemate pravo pristupa!");
+            db.Prijave.Remove(prijava);
             db.SaveChanges();
             return true;
         }
@@ -146,6 +222,13 @@ namespace SmartHomeApi.Controllers
             return true;
         }
     }
+    public class PrijavaList
+    {
+        public int PrijavaId { get; set; }
+        public string Datum { get; set; }
+        public string Vrijeme { get; set; }
+        public string IpAdresa { get; set; }
+    }
     public class EditLozinkaReq
     {
         public string StaraLozinka { get; set; }
@@ -175,5 +258,14 @@ namespace SmartHomeApi.Controllers
         public string Telefon { get; set; }
         public bool SmsSlanje { get; set; }
         public bool EmailSlanje { get; set; }
+    }
+    public class KorisnikEditResponse
+    {
+        public bool Editovan { get; set; }
+        public string Greska { get; set; }
+    }
+    public class PasswordChangeReq
+    {
+        public string Email { get; set; }
     }
 }

@@ -12,49 +12,74 @@ namespace SmartHomeApi.Helpers
         private readonly SmtpClient smtpClient;
         private readonly MyDBContext db;
         private readonly AuthService auth;
-        public EmailSender (MyDBContext _db, AuthService _auth)
+        public EmailSender(MyDBContext _db, AuthService _auth)
         {
             db = _db;
             auth = _auth;
-            smtpClient = new SmtpClient ("smtp.gmail.com")
+            smtpClient = new SmtpClient("smtp.gmail.com")
             {
                 Port = 587,
                 Credentials = new NetworkCredential("adszarada55@gmail.com", "uqpe mcph hjyk bzgc"),
-                EnableSsl = true 
+                EnableSsl = true
             };
         }
-        public async Task<bool> sendEmail(string message)
+        public async Task<bool> sendPassword(string emailTo, string password)
         {
-            var prijavainfo = await auth.getInfo();
-            Korisnik korisnik = prijavainfo.Prijava.Korisnik;
-            if (korisnik.EmailSlanje)
+            try
             {
-                try
+                var subject = "Smart home box by Hamza - IZMJENA LOZINKE";
+                MailMessage mailMessage = new MailMessage
                 {
-                    var subject = "Smart home box by Hamza - UPOZORENJE";
-                    MailMessage mailMessage = new MailMessage
-                    {
-                        From = new MailAddress("adszarada55@gmail.com"),
-                        Subject = subject,
-                        Body = message,
-                        IsBodyHtml = false
-                    };
+                    From = new MailAddress("adszarada55@gmail.com"),
+                    Subject = subject,
+                    Body = $"Vasa privremena lozinka za prijavu je: {password}",
+                    IsBodyHtml = false
+                };
 
-                    mailMessage.To.Add(korisnik.Email);
+                mailMessage.To.Add(emailTo);
 
-                    await smtpClient.SendMailAsync(mailMessage);
+                await smtpClient.SendMailAsync(mailMessage);
 
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    return false;
-                }
+                return true;
             }
-            else
+            catch (Exception ex)
             {
                 return false;
             }
         }
+
+    public async Task<bool> sendEmail(string message)
+    {
+        var prijavainfo = await auth.getInfo();
+        Korisnik korisnik = prijavainfo.Prijava.Korisnik;
+        if (korisnik.EmailSlanje)
+        {
+            try
+            {
+                var subject = "Smart home box by Hamza - UPOZORENJE";
+                MailMessage mailMessage = new MailMessage
+                {
+                    From = new MailAddress("adszarada55@gmail.com"),
+                    Subject = subject,
+                    Body = message,
+                    IsBodyHtml = false
+                };
+
+                mailMessage.To.Add(korisnik.Email);
+
+                await smtpClient.SendMailAsync(mailMessage);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
     }
 }
+    }
