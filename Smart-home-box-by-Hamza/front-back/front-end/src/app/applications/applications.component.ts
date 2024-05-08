@@ -15,10 +15,13 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
   constructor(private http:HttpClient, protected auth:AuthService, private login:LoginProvjera) { }
 
   async ngOnInit(){
+    this.provjera = setInterval(async ()=> await this.login.provjeraPrijave() ,1000);
     await this.ucitajPrijave();
   }
+  ngOnDestroy() {
+    clearInterval(this.provjera);
+  }
   async ucitajPrijave() {
-    this.provjera = setInterval(async ()=> await this.login.provjeraPrijave() ,1000);
      this.prijave = await this.http.get("https://smarthomeapi.p2347.app.fit.ba/getPrijave").toPromise();
   }
   async obrisiPrijavu(id:number) {
@@ -32,9 +35,6 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
      }
      alert("Unsuccess load!");
      this.moguce_slanje = true;
-  }
-  ngOnDestroy() {
-   clearInterval(this.provjera);
   }
 
   protected readonly parseInt = parseInt;

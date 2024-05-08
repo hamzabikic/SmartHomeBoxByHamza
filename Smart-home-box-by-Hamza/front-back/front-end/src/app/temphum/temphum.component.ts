@@ -36,10 +36,9 @@ export class TemphumComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.setujDatum();
-    await this.ucitajPodatke();
-    await this.ucitajHistory();
     this.interval = setInterval(()=> {this.ucitajPodatke()},1000);
     this.provjera = setInterval(async ()=> await this.login.provjeraPrijave(),1000 );
+    await this.ucitajHistory();
   }
   setujDatum() {
     this.datum=new Date().toISOString().split('T')[0];
@@ -82,11 +81,11 @@ export class TemphumComponent implements OnInit, OnDestroy {
           this.temperatura = String(snapshot.val().Temperature);
           this.humidity = String(snapshot.val().Humidity);
         } else {
-          alert("Podaci nisu pronadjeni!");
+          console.log("Podaci nisu pronadjeni!");
         }
       }
     ).catch((err: any) => {
-      alert("Greska: " + err);
+      console.log("Greska: " + err);
     });
   }
   tempcss() {

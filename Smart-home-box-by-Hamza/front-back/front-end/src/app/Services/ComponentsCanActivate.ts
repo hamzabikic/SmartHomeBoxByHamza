@@ -7,10 +7,10 @@ import {HttpClient} from "@angular/common/http";
 @Injectable()
 
 export class ComponentsCanActivate implements CanActivate {
-    constructor(private router: Router,private auth: AuthService, private http:HttpClient) {
+    constructor(private router: Router,private auth: AuthService) {
 
     }
-    async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) :Promise<boolean>{
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         if(!this.auth.jeLogiran()) {
           this.router.navigate(["/login"]);
           return false;

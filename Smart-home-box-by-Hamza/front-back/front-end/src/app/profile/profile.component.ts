@@ -26,8 +26,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
 
   async ngOnInit() {
-    await this.ucitajPodatke();
     this.provjera = setInterval(async ()=> await this.login.provjeraPrijave(),1000);
+    await this.ucitajPodatke();
   }
   async ucitajPodatke() {
     this.korisnik = await this.http.get<KorisnikInfo>("https://smarthomeapi.p2347.app.fit.ba/getInfo").toPromise();

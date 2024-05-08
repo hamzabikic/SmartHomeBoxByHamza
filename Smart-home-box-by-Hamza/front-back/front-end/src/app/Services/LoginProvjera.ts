@@ -8,10 +8,15 @@ export class LoginProvjera {
 
   }
   async provjeraPrijave() {
+    try{
     let res = await this.http.get("https://smarthomeapi.p2347.app.fit.ba/jePrijavljen").toPromise();
     if(!res) {
       localStorage.removeItem("my-token");
       this.router.navigate(["/login"]);
+    }
+    }
+    catch(err) {
+     console.log("Error: " + err);
     }
   }
 

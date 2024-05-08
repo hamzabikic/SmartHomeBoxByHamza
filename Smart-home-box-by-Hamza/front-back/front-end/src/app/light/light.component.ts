@@ -29,7 +29,6 @@ export class LightComponent implements OnInit, OnDestroy {
     }
 
   async ngOnInit() {
-    await this.ucitajPodatke();
     this.interval = setInterval(()=> {this.ucitajPodatke()}, 1000);
     this.provjera = setInterval(async ()=> await this.login.provjeraPrijave() ,1000);
     await this.ucitajTajming();
@@ -59,11 +58,11 @@ export class LightComponent implements OnInit, OnDestroy {
           this.automatskoSvjetlo = snapshot.val().AutomatskoSvjetlo;
           this.upaljenoSvjetlo = snapshot.val().UpaljenoSvjetlo;
         } else {
-          alert("Podaci nisu pronadjeni!");
+          console.log("Podaci nisu pronadjeni!");
         }
       }
     ).catch((err: any) => {
-      alert("Greska: " + err);
+      console.log("Greska: " + err);
     });
   }
   automatskoPaljenje() {

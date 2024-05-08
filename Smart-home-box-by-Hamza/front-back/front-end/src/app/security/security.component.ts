@@ -14,7 +14,7 @@ import {environment} from "../../environments/environment.prod";
 })
 export class SecurityComponent implements OnInit, OnDestroy {
 
-  aktivirajSigurnosni = true;
+  aktivirajSigurnosni = false;
   app = initializeApp(environment.firebaseConfig);
   db:any;
   isDate = false;
@@ -35,10 +35,9 @@ export class SecurityComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.setujDatum();
-    await this.ucitajSenzore();
-    await this.ucitajHistory();
     this.interval = setInterval(()=> {this.ucitajSenzore();},1000);
     this.provjera = setInterval(async ()=> await this.login.provjeraPrijave(),1000 );
+    await this.ucitajHistory();
 
   }
   setujDatum() {
@@ -113,11 +112,11 @@ export class SecurityComponent implements OnInit, OnDestroy {
             this.movement = "Deactivated";
           }
         } else {
-          alert("Podaci nisu pronadjeni!");
+          console.log("Podaci nisu pronadjeni!");
         }
       }
     ).catch((err: any) => {
-      alert("Greska: " + err);
+      console.log("Greska: " + err);
     });
   }
   ugasiAlarm() {
