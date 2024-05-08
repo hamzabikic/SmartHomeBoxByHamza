@@ -53,7 +53,7 @@
       </label>
     </div>
     <button [disabled] ="!moguce_slanje!" (click)="promijeniSifru()" type="submit" class="btn btn-primary">Change your password</button>
-    <button [disabled]="!moguce_slanje3" id="odjava-btn" (click)="odjavise()" class="btn btn-warning">Log me out</button>
+    <button [disabled]="!moguce_slanje3" id="odjava-btn" (click)="this.izbrisan = true; clearInterval(this.provjera);odjavise();" class="btn btn-warning">Log me out</button>
     <a routerLink="/applications" style="display:block; margin-top:10px;">Where I am logged in?</a>
   </div>
   <p id="note">Note: You start receiving notifications for 24 hours on WhatsApp of your entered phone number

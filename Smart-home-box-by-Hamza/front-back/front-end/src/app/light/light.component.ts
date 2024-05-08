@@ -19,19 +19,21 @@ export class LightComponent implements OnInit, OnDestroy {
   db:any;
   interval:any;
   provjera:any;
-  constructor(private http :HttpClient ,private auth:AuthService, private login: LoginProvjera) {
+  constructor(private http :HttpClient ,private auth:AuthService, public login: LoginProvjera) {
     this.db = getDatabase();
   }
 
   ngOnDestroy(): void {
         clearInterval(this.interval);
-        clearInterval(this.provjera);
     }
 
   async ngOnInit() {
-    this.interval = setInterval(()=> {this.ucitajPodatke()}, 1000);
-    this.provjera = setInterval(async ()=> await this.login.provjeraPrijave() ,1000);
+    this.ucitajPodatke();
+    await this.login.provjeraPrijave();
     await this.ucitajTajming();
+    this.interval = setInterval(()=> {this.ucitajPodatke()}, 1000);
+    this.provjera = setInterval(async ()=> {this.login.utoku= true; await this.login.provjeraPrijave();
+    } ,1000);
   }
   async ucitajTajming() {
     let obj = await this.http.get("https://smarthomeapi.p2347.app.fit.ba/Light/getTime").toPromise();

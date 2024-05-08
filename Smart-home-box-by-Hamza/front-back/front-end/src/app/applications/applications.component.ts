@@ -12,14 +12,15 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
   prijave:any;
   moguce_slanje = true;
   provjera:any;
-  constructor(private http:HttpClient, protected auth:AuthService, private login:LoginProvjera) { }
+  constructor(private http:HttpClient, protected auth:AuthService, public login:LoginProvjera) { }
 
   async ngOnInit(){
-    this.provjera = setInterval(async ()=> await this.login.provjeraPrijave() ,1000);
+    await this.login.provjeraPrijave();
     await this.ucitajPrijave();
+    this.provjera = setInterval(async ()=> {this.login.utoku= true; await this.login.provjeraPrijave();
+    } ,1000);
   }
   ngOnDestroy() {
-    clearInterval(this.provjera);
   }
   async ucitajPrijave() {
      this.prijave = await this.http.get("https://smarthomeapi.p2347.app.fit.ba/getPrijave").toPromise();

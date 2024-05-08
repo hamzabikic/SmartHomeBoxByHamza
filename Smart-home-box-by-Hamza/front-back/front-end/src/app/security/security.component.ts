@@ -24,21 +24,22 @@ export class SecurityComponent implements OnInit, OnDestroy {
   movement = "";
   interval:any;
   provjera:any;
-  constructor(private http: HttpClient, private auth:AuthService, private login: LoginProvjera) {
+  constructor(private http: HttpClient, private auth:AuthService, public login: LoginProvjera) {
     this.db = getDatabase();
   }
 
   ngOnDestroy(): void {
         clearInterval(this.interval);
-        clearInterval(this.provjera);
     }
 
   async ngOnInit() {
     this.setujDatum();
-    this.interval = setInterval(()=> {this.ucitajSenzore();},1000);
-    this.provjera = setInterval(async ()=> await this.login.provjeraPrijave(),1000 );
+    this.ucitajSenzore();
+    await this.login.provjeraPrijave();
     await this.ucitajHistory();
-
+    this.interval = setInterval(()=> {this.ucitajSenzore();},1000);
+    this.provjera = setInterval(async ()=> {this.login.utoku= true; await this.login.provjeraPrijave();
+    } ,1000);
   }
   setujDatum() {
     this.datum=new Date().toISOString().split('T')[0];

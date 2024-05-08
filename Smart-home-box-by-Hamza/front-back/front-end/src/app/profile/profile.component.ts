@@ -19,15 +19,18 @@ export class ProfileComponent implements OnInit, OnDestroy {
   moguce_slanje2 = true;
   moguce_slanje3 = true;
   provjera:any;
-  constructor(private http:HttpClient, private router: Router, private login : LoginProvjera) { }
+  izbrisan = false;
+  constructor(private http:HttpClient, private router: Router, public login : LoginProvjera) { }
 
   ngOnDestroy(): void {
-        clearInterval(this.provjera);
     }
 
+
   async ngOnInit() {
-    this.provjera = setInterval(async ()=> await this.login.provjeraPrijave(),1000);
+    await this.login.provjeraPrijave();
     await this.ucitajPodatke();
+    this.provjera = setInterval(async ()=> {this.login.utoku= true; await this.login.provjeraPrijave();
+      } ,1000);
   }
   async ucitajPodatke() {
     this.korisnik = await this.http.get<KorisnikInfo>("https://smarthomeapi.p2347.app.fit.ba/getInfo").toPromise();
@@ -48,7 +51,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.moguce_slanje2 = true;
     }
   }
-  async odjavise() {
+  async odjavaPoziv() {
+    if(localStorage.getItem("my-token") == null) {return;}
     this.moguce_slanje3 =false;
     let res = await this.http.get("https://smarthomeapi.p2347.app.fit.ba/Odjava").toPromise();
     if(res) {
@@ -57,8 +61,17 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.moguce_slanje3 = true;
       return;
     }
+    this.izbrisan=false;
+    this.provjera = setInterval(async ()=> {this.login.utoku= true; await this.login.provjeraPrijave();
+    } ,1000);
     alert("Unsuccessful logout!");
     this.moguce_slanje3 = true;
+  }
+  async odjavise() {
+    while(this.login.utoku) {
+
+    }
+    await this.odjavaPoziv();
   }
   async promijeniSifru() {
      let obj = {
@@ -81,4 +94,6 @@ export class ProfileComponent implements OnInit, OnDestroy {
     alert(res.greska);
     this.moguce_slanje= true;
   }
+
+  protected readonly clearInterval = clearInterval;
 }

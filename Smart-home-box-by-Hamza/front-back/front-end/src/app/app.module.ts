@@ -18,6 +18,8 @@ import {LoginCanActivate} from "./Services/LoginCanActivate";
 import {LoginProvjera} from "./Services/LoginProvjera";
 import { PasswordComponent } from './password/password.component';
 import { ApplicationsComponent } from './applications/applications.component';
+import {ComponentCanDeactivate} from "./Services/ComponentCanDeactivate";
+import {ProfileCanDeactivate} from "./Services/ProfileCanDeactivate";
 
 @NgModule({
   declarations: [
@@ -35,20 +37,28 @@ import { ApplicationsComponent } from './applications/applications.component';
         BrowserModule,
         FormsModule,
       RouterModule.forRoot([
-        {path:"temperaturehumidity", component:TemphumComponent, canActivate:[ComponentsCanActivate]},
-        {path:"gasfire", component:GasfireComponent, canActivate:[ComponentsCanActivate]},
-        {path:"security", component:SecurityComponent, canActivate:[ComponentsCanActivate]},
-        {path:"profile", component:ProfileComponent, canActivate:[ComponentsCanActivate]},
-        {path:"light", component:LightComponent, canActivate:[ComponentsCanActivate]},
+        {path:"temperaturehumidity", component:TemphumComponent, canActivate:[ComponentsCanActivate],
+        canDeactivate:[ComponentCanDeactivate]},
+        {path:"gasfire", component:GasfireComponent, canActivate:[ComponentsCanActivate]
+          ,
+          canDeactivate:[ComponentCanDeactivate]},
+        {path:"security", component:SecurityComponent, canActivate:[ComponentsCanActivate]
+          ,
+          canDeactivate:[ComponentCanDeactivate]},
+        {path:"profile", component:ProfileComponent, canActivate:[ComponentsCanActivate],
+        canDeactivate:[ProfileCanDeactivate]},
+        {path:"light", component:LightComponent, canActivate:[ComponentsCanActivate],
+        canDeactivate:[ComponentCanDeactivate]},
         {path:"login", component:LoginComponent , canActivate:[LoginCanActivate]},
         {path:"password", component:PasswordComponent, canActivate:[LoginCanActivate]},
-        {path:"applications", component:ApplicationsComponent, canActivate:[ComponentsCanActivate]},
+        {path:"applications", component:ApplicationsComponent, canActivate:[ComponentsCanActivate] ,
+          canDeactivate:[ComponentCanDeactivate]},
         {path:"**", redirectTo:"profile", pathMatch:"full"}
       ],{ useHash: true }),
       HttpClientModule
     ],
   providers: [AuthService, {provide:HTTP_INTERCEPTORS, multi:true, useClass:MyHttpInterceptor}, LoginCanActivate,
-  ComponentsCanActivate, LoginProvjera],
+  ComponentsCanActivate, LoginProvjera, ComponentCanDeactivate, ProfileCanDeactivate],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
