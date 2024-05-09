@@ -22,15 +22,15 @@ export class TemphumComponent implements OnInit, OnDestroy {
   historyLista :TemperaturaVlaznost[] = [];
   datum:string ="";
   dropDown = "1";
-  interval: any;
-  provjera:any;
+  interval: NodeJS.Timeout | undefined = undefined;
+  provjera:NodeJS.Timeout | undefined = undefined;
   constructor(private http: HttpClient, private auth: AuthService, public login: LoginProvjera) {
     this.db = getDatabase();
 
   }
 
   ngOnDestroy(): void {
-        clearInterval(this.interval);
+
     }
 
   async ngOnInit() {
@@ -39,7 +39,7 @@ export class TemphumComponent implements OnInit, OnDestroy {
     await this.login.provjeraPrijave();
     await this.ucitajHistory();
     this.interval = setInterval(()=> {this.ucitajPodatke()},1000);
-    this.provjera = setInterval(async ()=> {this.login.utoku= true; await this.login.provjeraPrijave();
+    this.provjera = setInterval(async ()=> {await this.login.provjeraPrijave();
     } ,1000);
   }
   setujDatum() {

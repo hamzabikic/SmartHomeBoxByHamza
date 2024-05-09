@@ -22,14 +22,14 @@ export class SecurityComponent implements OnInit, OnDestroy {
   datum:string ="";
   dropDown = "1";
   movement = "";
-  interval:any;
-  provjera:any;
+  interval:NodeJS.Timeout | undefined = undefined;
+  provjera:NodeJS.Timeout | undefined = undefined;
   constructor(private http: HttpClient, private auth:AuthService, public login: LoginProvjera) {
     this.db = getDatabase();
   }
 
   ngOnDestroy(): void {
-        clearInterval(this.interval);
+
     }
 
   async ngOnInit() {
@@ -38,7 +38,7 @@ export class SecurityComponent implements OnInit, OnDestroy {
     await this.login.provjeraPrijave();
     await this.ucitajHistory();
     this.interval = setInterval(()=> {this.ucitajSenzore();},1000);
-    this.provjera = setInterval(async ()=> {this.login.utoku= true; await this.login.provjeraPrijave();
+    this.provjera = setInterval(async ()=> {await this.login.provjeraPrijave();
     } ,1000);
   }
   setujDatum() {
@@ -80,7 +80,6 @@ export class SecurityComponent implements OnInit, OnDestroy {
       update(ref(this.db, `${this.auth.getId()}/`), {
         AktiviranSigurnosniSustav: 1
       }).then(() => {
-        console.log("Podaci uspjesno ucitani!");
       }).catch((err) => {
         console.log("Greska: " + err);
       });
@@ -91,7 +90,6 @@ export class SecurityComponent implements OnInit, OnDestroy {
         SenzorPokreta:0,
         AlarmPokret:0
       }).then(() => {
-        console.log("Podaci uspjesno ucitani!");
       }).catch((err) => {
         console.log("Greska: " + err);
       });
@@ -125,7 +123,6 @@ export class SecurityComponent implements OnInit, OnDestroy {
       SenzorPokreta:0,
       AlarmPokret:0
     }).then(() => {
-      console.log("Podaci uspjesno ucitani!");
     }).catch((err) => {
       console.log("Greska: " + err);
     });

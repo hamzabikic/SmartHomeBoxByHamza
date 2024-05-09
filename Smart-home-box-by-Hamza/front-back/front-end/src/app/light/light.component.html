@@ -6,13 +6,13 @@
     </div>
     <div class="podatak">
       <h4>From</h4>
-      <select [(ngModel)]="prvoVrijeme" [disabled]="!automatskoSvjetlo" class="form-select" aria-label="Default select example">
+      <select (click)="prekiniTajming()" [(ngModel)]="prvoVrijeme" [disabled]="!automatskoSvjetlo" class="form-select" aria-label="Default select example">
         <option *ngFor="let x of [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" value="{{x}}">
            {{x}}:00
         </option>
       </select>
       <h4>To</h4>
-      <select [(ngModel)]="drugoVrijeme" [disabled]="!automatskoSvjetlo" class="form-select" aria-label="Default select example">
+      <select (click)="prekiniTajming()" [(ngModel)]="drugoVrijeme" [disabled]="!automatskoSvjetlo" class="form-select" aria-label="Default select example">
         <option *ngFor="let x of [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]" value="{{x}}">
           {{x}}:00
         </option>

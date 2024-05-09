@@ -5,6 +5,7 @@ import {HttpClient} from "@angular/common/http";
 import {AuthService} from "../Services/AuthService";
 import {LoginProvjera} from "../Services/LoginProvjera";
 import {environment} from "../../environments/environment.prod";
+import {InfoClass} from "../Services/InfoClass";
 @Component({
   selector: 'app-light',
   templateUrl: './light.component.html',
@@ -17,14 +18,15 @@ export class LightComponent implements OnInit, OnDestroy {
   automatskoSvjetlo = false;
   upaljenoSvjetlo = false;
   db:any;
-  interval:any;
-  provjera:any;
+  interval:NodeJS.Timeout | undefined = undefined;
+  provjera:NodeJS.Timeout | undefined = undefined;
+  interval2:NodeJS.Timeout | undefined = undefined;
   constructor(private http :HttpClient ,private auth:AuthService, public login: LoginProvjera) {
     this.db = getDatabase();
   }
 
   ngOnDestroy(): void {
-        clearInterval(this.interval);
+
     }
 
   async ngOnInit() {
@@ -32,8 +34,12 @@ export class LightComponent implements OnInit, OnDestroy {
     await this.login.provjeraPrijave();
     await this.ucitajTajming();
     this.interval = setInterval(()=> {this.ucitajPodatke()}, 1000);
-    this.provjera = setInterval(async ()=> {this.login.utoku= true; await this.login.provjeraPrijave();
+    this.provjera = setInterval(async ()=> {await this.login.provjeraPrijave();
     } ,1000);
+    this.interval2 = setInterval(async()=>await this.ucitajTajming(),1000);
+  }
+  prekiniTajming() {
+    clearInterval(this.interval2);
   }
   async ucitajTajming() {
     let obj = await this.http.get("https://smarthomeapi.p2347.app.fit.ba/Light/getTime").toPromise();
@@ -43,6 +49,8 @@ export class LightComponent implements OnInit, OnDestroy {
     this.drugoVrijeme = obj.kraj;
   }
   async setTime () {
+    InfoClass.moguce=false;
+    clearInterval(this.interval2);
    let obj = await this.http.post("https://smarthomeapi.p2347.app.fit.ba/Light/setTime?pocetak="+this.prvoVrijeme+"&kraj="+
       this.drugoVrijeme, {}).toPromise();
    if(obj == true) {
@@ -51,7 +59,12 @@ export class LightComponent implements OnInit, OnDestroy {
    else {
      alert("Error");
    }
-   await this.ucitajPodatke();
+   if(localStorage.getItem("my-token") ==null) {
+     InfoClass.moguce =true;
+     return;
+   }
+   this.interval2 = setInterval(async()=> await this.ucitajTajming(),1000);
+   InfoClass.moguce =true;
   }
   ucitajPodatke () {
     get(child(ref(this.db), `${this.auth.getId()}/`)).then(
@@ -73,7 +86,6 @@ export class LightComponent implements OnInit, OnDestroy {
         AutomatskoSvjetlo:1,
         UpaljenoSvjetlo:0
       }).then(() => {
-        console.log("Podaci uspjesno ucitani!");
       }).catch((err) => {
         console.log("Greska: " + err);
       });
@@ -83,7 +95,6 @@ export class LightComponent implements OnInit, OnDestroy {
       update(ref(this.db, `${this.auth.getId()}/`), {
         AutomatskoSvjetlo:0
       }).then(() => {
-        console.log("Podaci uspjesno ucitani!");
       }).catch((err) => {
         console.log("Greska: " + err);
       });
@@ -94,7 +105,6 @@ export class LightComponent implements OnInit, OnDestroy {
       update(ref(this.db, `${this.auth.getId()}/`), {
         UpaljenoSvjetlo:1
       }).then(() => {
-        console.log("Podaci uspjesno ucitani!");
       }).catch((err) => {
         console.log("Greska: " + err);
       });
@@ -103,7 +113,6 @@ export class LightComponent implements OnInit, OnDestroy {
         update(ref(this.db, `${this.auth.getId()}/`), {
           UpaljenoSvjetlo:0
         }).then(() => {
-          console.log("Podaci uspjesno ucitani!");
         }).catch((err) => {
           console.log("Greska: " + err);
         });

@@ -7,14 +7,11 @@ export class LoginProvjera {
   constructor(private http: HttpClient,private router:Router) {
 
   }
-  utoku=false;
   async provjeraPrijave() {
-    this.utoku= true;
     try{
     let res = await this.http.get("https://smarthomeapi.p2347.app.fit.ba/jePrijavljen").toPromise();
     if(!res) {
       localStorage.removeItem("my-token");
-      this.utoku=false;
       this.router.navigate(["/login"]);
       return;
     }
@@ -22,6 +19,5 @@ export class LoginProvjera {
     catch(err) {
      console.log("Error: " + err);
     }
-    this.utoku=false;
   }
 }

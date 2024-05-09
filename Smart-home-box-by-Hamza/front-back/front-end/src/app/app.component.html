@@ -3,11 +3,11 @@
 </header>
 <nav>
   <div id="buttoni" *ngIf="auth.jeLogiran()">
-  <button id="id1" routerLink="/temperaturehumidity" type="button" class="btn btn-light"><img src="https://w7.pngwing.com/pngs/285/1015/png-transparent-computer-icons-dew-point-temperature-dew-text-logo-meteorology-thumbnail.png"></button>
-  <button id="id2" routerLink="/gasfire" type="button" class="btn btn-light"><img src="https://img.freepik.com/premium-vector/fire-flame-logo_617585-3138.jpg"></button>
-  <button id="id3" routerLink="/security" type="button" class="btn btn-light"><img src="  https://static.vecteezy.com/system/resources/thumbnails/005/261/421/small/cctv-camera-icon-security-camera-icon-free-vector.jpg"></button>
-  <button id="id4" routerLink="/light" type="button" class="btn btn-light"><img src="https://cdn-icons-png.freepik.com/512/3348/3348296.png"></button>
-    <button id="id5" style="margin-right:0;" routerLink="/profile" type="button" class="btn btn-light"><img src="https://iconape.com/wp-content/files/nb/368023/svg/person-logo-icon-png-svg.png"></button>
+  <button [disabled]="!InfoClass.moguce" id="id1" routerLink="/temperaturehumidity" type="button" class="btn btn-light"><img src="https://w7.pngwing.com/pngs/285/1015/png-transparent-computer-icons-dew-point-temperature-dew-text-logo-meteorology-thumbnail.png"></button>
+  <button [disabled]="!InfoClass.moguce" id="id2" routerLink="/gasfire" type="button" class="btn btn-light"><img src="https://img.freepik.com/premium-vector/fire-flame-logo_617585-3138.jpg"></button>
+  <button [disabled]="!InfoClass.moguce" id="id3" routerLink="/security" type="button" class="btn btn-light"><img src="  https://static.vecteezy.com/system/resources/thumbnails/005/261/421/small/cctv-camera-icon-security-camera-icon-free-vector.jpg"></button>
+  <button [disabled]="!InfoClass.moguce" id="id4" routerLink="/light" type="button" class="btn btn-light"><img src="https://cdn-icons-png.freepik.com/512/3348/3348296.png"></button>
+    <button [disabled]="!InfoClass.moguce" id="id5" style="margin-right:0;" routerLink="/profile" type="button" class="btn btn-light"><img src="https://iconape.com/wp-content/files/nb/368023/svg/person-logo-icon-png-svg.png"></button>
   </div>
 </nav>
 <div id="info">

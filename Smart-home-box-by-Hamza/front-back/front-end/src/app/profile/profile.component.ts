@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {KorisnikInfo} from "../Klase/Klase";
 import {Router} from "@angular/router";
 import {LoginProvjera} from "../Services/LoginProvjera";
+import {InfoClass} from "../Services/InfoClass";
 
 @Component({
   selector: 'app-profile',
@@ -18,8 +19,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   moguce_slanje = true;
   moguce_slanje2 = true;
   moguce_slanje3 = true;
-  provjera:any;
-  izbrisan = false;
+  provjera:NodeJS.Timeout | undefined = undefined;
   constructor(private http:HttpClient, private router: Router, public login : LoginProvjera) { }
 
   ngOnDestroy(): void {
@@ -29,8 +29,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     await this.login.provjeraPrijave();
     await this.ucitajPodatke();
-    this.provjera = setInterval(async ()=> {this.login.utoku= true; await this.login.provjeraPrijave();
-      } ,1000);
+    this.provjera = setInterval(async ()=> {await this.login.provjeraPrijave();},1000);
   }
   async ucitajPodatke() {
     this.korisnik = await this.http.get<KorisnikInfo>("https://smarthomeapi.p2347.app.fit.ba/getInfo").toPromise();
@@ -51,28 +50,31 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.moguce_slanje2 = true;
     }
   }
-  async odjavaPoziv() {
-    if(localStorage.getItem("my-token") == null) {return;}
-    this.moguce_slanje3 =false;
-    let res = await this.http.get("https://smarthomeapi.p2347.app.fit.ba/Odjava").toPromise();
-    if(res) {
-      localStorage.removeItem("my-token");
-      this.router.navigate(["/login"]);
+  async odjavise(){
+    InfoClass.moguce = false;
+    clearInterval(this.provjera);
+    this.moguce_slanje3 = false;
+    setTimeout(async () => {
+      let res = await this.http.get("https://smarthomeapi.p2347.app.fit.ba/Odjava").toPromise();
+      if (res) {
+        localStorage.removeItem("my-token");
+        this.router.navigate(["/login"]);
+        this.moguce_slanje3 = true;
+        InfoClass.moguce = true;
+        return;
+      }
+      alert("Unsuccessful logout!");
+      if(localStorage.getItem("my-token") == null) {
+        this.moguce_slanje3 = true;
+        InfoClass.moguce = true;
+        return;
+      }
+      this.provjera= setInterval(async ()=> {await this.login.provjeraPrijave();},1000);
       this.moguce_slanje3 = true;
-      return;
-    }
-    this.izbrisan=false;
-    this.provjera = setInterval(async ()=> {this.login.utoku= true; await this.login.provjeraPrijave();
-    } ,1000);
-    alert("Unsuccessful logout!");
-    this.moguce_slanje3 = true;
+      InfoClass.moguce = true;
+    }, 2000);
   }
-  async odjavise() {
-    while(this.login.utoku) {
 
-    }
-    await this.odjavaPoziv();
-  }
   async promijeniSifru() {
      let obj = {
        staraLozinka: this.staraLozinka,

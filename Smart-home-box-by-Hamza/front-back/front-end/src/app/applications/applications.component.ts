@@ -2,25 +2,24 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {AuthService} from "../Services/AuthService";
 import {LoginProvjera} from "../Services/LoginProvjera";
+import {TimeoutInfo} from "rxjs";
 
 @Component({
   selector: 'app-applications',
   templateUrl: './applications.component.html',
   styleUrls: ['./applications.component.css']
 })
-export class ApplicationsComponent implements OnInit, OnDestroy {
+export class ApplicationsComponent implements OnInit{
   prijave:any;
   moguce_slanje = true;
-  provjera:any;
+  provjera:NodeJS.Timeout | undefined = undefined;
   constructor(private http:HttpClient, protected auth:AuthService, public login:LoginProvjera) { }
 
   async ngOnInit(){
     await this.login.provjeraPrijave();
     await this.ucitajPrijave();
-    this.provjera = setInterval(async ()=> {this.login.utoku= true; await this.login.provjeraPrijave();
+    this.provjera = setInterval(async ()=> {await this.login.provjeraPrijave();
     } ,1000);
-  }
-  ngOnDestroy() {
   }
   async ucitajPrijave() {
      this.prijave = await this.http.get("https://smarthomeapi.p2347.app.fit.ba/getPrijave").toPromise();

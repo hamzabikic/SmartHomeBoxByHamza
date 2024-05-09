@@ -21,6 +21,7 @@
     "bootstrap": "^5.3.3",
     "bootstrap4-toggle": "^3.6.1",
     "firebase": "^10.11.0",
+    "ngx-spinner": "^16.0.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"

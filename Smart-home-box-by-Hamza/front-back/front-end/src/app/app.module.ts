@@ -19,7 +19,6 @@ import {LoginProvjera} from "./Services/LoginProvjera";
 import { PasswordComponent } from './password/password.component';
 import { ApplicationsComponent } from './applications/applications.component';
 import {ComponentCanDeactivate} from "./Services/ComponentCanDeactivate";
-import {ProfileCanDeactivate} from "./Services/ProfileCanDeactivate";
 
 @NgModule({
   declarations: [
@@ -38,27 +37,27 @@ import {ProfileCanDeactivate} from "./Services/ProfileCanDeactivate";
         FormsModule,
       RouterModule.forRoot([
         {path:"temperaturehumidity", component:TemphumComponent, canActivate:[ComponentsCanActivate],
-        canDeactivate:[ComponentCanDeactivate]},
+        canDeactivate:[ComponentCanDeactivate], runGuardsAndResolvers: 'always'},
         {path:"gasfire", component:GasfireComponent, canActivate:[ComponentsCanActivate]
           ,
-          canDeactivate:[ComponentCanDeactivate]},
+          canDeactivate:[ComponentCanDeactivate], runGuardsAndResolvers: 'always'} ,
         {path:"security", component:SecurityComponent, canActivate:[ComponentsCanActivate]
           ,
-          canDeactivate:[ComponentCanDeactivate]},
+          canDeactivate:[ComponentCanDeactivate], runGuardsAndResolvers: 'always'},
         {path:"profile", component:ProfileComponent, canActivate:[ComponentsCanActivate],
-        canDeactivate:[ProfileCanDeactivate]},
+        canDeactivate:[ComponentCanDeactivate], runGuardsAndResolvers: 'always'},
         {path:"light", component:LightComponent, canActivate:[ComponentsCanActivate],
-        canDeactivate:[ComponentCanDeactivate]},
-        {path:"login", component:LoginComponent , canActivate:[LoginCanActivate]},
-        {path:"password", component:PasswordComponent, canActivate:[LoginCanActivate]},
+        canDeactivate:[ComponentCanDeactivate], runGuardsAndResolvers: 'always'},
+        {path:"login", component:LoginComponent , canActivate:[LoginCanActivate], runGuardsAndResolvers: 'always'},
+        {path:"password", component:PasswordComponent, canActivate:[LoginCanActivate], runGuardsAndResolvers: 'always'},
         {path:"applications", component:ApplicationsComponent, canActivate:[ComponentsCanActivate] ,
-          canDeactivate:[ComponentCanDeactivate]},
+          canDeactivate:[ComponentCanDeactivate], runGuardsAndResolvers: 'always'},
         {path:"**", redirectTo:"profile", pathMatch:"full"}
       ],{ useHash: true }),
-      HttpClientModule
+      HttpClientModule,
     ],
   providers: [AuthService, {provide:HTTP_INTERCEPTORS, multi:true, useClass:MyHttpInterceptor}, LoginCanActivate,
-  ComponentsCanActivate, LoginProvjera, ComponentCanDeactivate, ProfileCanDeactivate],
+  ComponentsCanActivate, LoginProvjera, ComponentCanDeactivate],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
