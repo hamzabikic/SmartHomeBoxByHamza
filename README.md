@@ -52,5 +52,25 @@ For a more aesthetically pleasing appearance, NodeMCU microcontrollers and senso
 
 This project provides a comprehensive home monitoring system that allows users to monitor and control various aspects of the environment and security of the space through a simple and elegant web application.
 
+<h3>Images</h3>
+<h4>Executive side</h4>
+<img src="images/vanjski1.jpg">
+<img src="images/vanjski2.jpg">
+<img src="images/vanjski3.jpg">
+<img src="images/vanjski4.jpg">
+<img src="images/vanjski5.jpg">
+<h3>Control side</h3>
+<img src="images/login.JPG">
+<img src="images/password-change.JPG">
+<img src="images/profile.JPG">
+<img src="images/temperature-humidity.JPG">
+<img src="images/gas-fire.JPG">
+<img src="images/security.JPG">
+<img src="images/light.JPG">
+<img src="images/ipaddresses.JPG">
+
+
+
+
 <h3>License</h3>
 This project is licensed under the MIT License.
