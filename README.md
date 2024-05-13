@@ -59,7 +59,7 @@ This project provides a comprehensive home monitoring system that allows users t
 <img src="images/vanjski3.jpg">
 <img src="images/vanjski4.jpg">
 <img src="images/vanjski5.jpg">
-<h3>Control side</h3>
+<h4>Control side</h4>
 <img src="images/login.JPG">
 <img src="images/password-change.JPG">
 <img src="images/profile.JPG">
@@ -68,9 +68,6 @@ This project provides a comprehensive home monitoring system that allows users t
 <img src="images/security.JPG">
 <img src="images/light.JPG">
 <img src="images/ipaddresses.JPG">
-
-
-
 
 <h3>License</h3>
 This project is licensed under the MIT License.
