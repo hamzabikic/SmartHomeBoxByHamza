@@ -30,6 +30,9 @@ The application consists of the following sections:
 - Temperature/Humidity: Display the current temperature and humidity in the space.
 - Light: Enable manual control of the 3W LED light or set automatic activation within a specified time period.
 - Profile: Allow users to change personal information and passwords.
+
+
+Responsiveness: The application is responsible for managing all devices, ensuring seamless control and monitoring."
 <h3>Other Functionalities</h3>
 
 - Alarm activation history and space temperature and humidity history.
