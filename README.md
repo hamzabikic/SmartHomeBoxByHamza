@@ -32,7 +32,7 @@ The application consists of the following sections:
 - Profile: Allow users to change personal information and passwords.
 
 
-"Responsiveness: The application is responsible for managing all devices and is designed to be responsive, ensuring seamless control and monitoring across all screen sizes."
+Responsiveness: The application is responsible for managing all devices and is designed to be responsive, ensuring seamless control and monitoring across all screen sizes."
 <h3>Other Functionalities</h3>
 
 - Alarm activation history and space temperature and humidity history.
