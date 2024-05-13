@@ -1,6 +1,6 @@
 # Smart home box by Hamza
 <h3>Project Description</h3>
-The "Smart Home Box by Hamza" project represents a system for monitoring and controlling the home via the internet (IoT). On the executive side, there are two NodeMCU ESP8266 microcontrollers with WiFi modules. These microcontrollers are connected to various sensors and actuators for environmental monitoring and security in the space.
+The "Smart Home Box by Hamza" project represents a system for monitoring and controlling the home via the internet (IoT). On the executive side, there are two NodeMCU ESP8266 microcontrollers with WiFi modules. These microcontrollers are connected to various sensors and actuators for environmental monitoring and security in the space. On the control side, a web application is developed using Angular with Bootstrap for the frontend, while the backend is powered by a web API implemented in ASP.NET Core (C#) connected to a SQL database. Additionally, the system utilizes Firebase real-time database for storing real-time sensor data.
 
 <h3>Components Used</h3>
 Sensors:
