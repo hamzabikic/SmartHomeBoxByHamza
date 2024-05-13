@@ -18,8 +18,7 @@ Actuators:
 - Button sensor
 <h3>Control Side</h3>
 The control side of the system consists of a web application implemented in Angular with Bootstrap. Additionally, there is a web API implemented in ASP.NET Core (C#), connected to a SQL database.
-
-
+<br>
 The SQL database is used to store sensor detection history and for the Twilio service for sending notifications via WhatsApp and SMS, as well as the SMTP service for sending email notifications. Besides the SQL database, a real-time database is used on Firebase for storing real-time sensor data.
 
 <h3>Application Functionalities</h3>
@@ -39,18 +38,14 @@ The application consists of the following sections:
 - View current IP addresses from which the login to the application was made.
 <h3> Testing the Application</h3>
 The application is available for testing at the following URL: https://hamzabikic.github.io
-
-
+<br>
 You can sign in using the following credentials:
-
-
+<br>
 - Username: admin
 - Password: adminadmin
-
 <h3>Executive Side Appearance</h3>
 For a more aesthetically pleasing appearance, NodeMCU microcontrollers and sensors are housed in a branded box, with sensors attached to the outside.
-
-
+<br>
 This project provides a comprehensive home monitoring system that allows users to monitor and control various aspects of the environment and security of the space through a simple and elegant web application.
 
 <h3>License</h3>
