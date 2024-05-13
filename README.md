@@ -38,7 +38,7 @@ The application consists of the following sections:
 - Ability to log out all devices with current logins and retrieve a temporary password via email in case of a forgotten password.
 - View current IP addresses from which the login to the application was made.
 <h3> Testing the Application</h3>
-The application is available for testing at the following URL: hamzabikic.github.io
+The application is available for testing at the following URL: https://hamzabikic.github.io
 
 
 You can sign in using the following credentials:
