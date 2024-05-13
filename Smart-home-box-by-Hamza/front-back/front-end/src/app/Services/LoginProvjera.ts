@@ -7,11 +7,14 @@ export class LoginProvjera {
   constructor(private http: HttpClient,private router:Router) {
 
   }
-  async provjeraPrijave() {
+  static interval: NodeJS.Timeout | undefined = undefined;
+  static servis :LoginProvjera |undefined = undefined;
+   async provjeraPrijave() {
     try{
     let res = await this.http.get("https://smarthomeapi.p2347.app.fit.ba/jePrijavljen").toPromise();
     if(!res) {
       localStorage.removeItem("my-token");
+      clearInterval(LoginProvjera.interval);
       this.router.navigate(["/login"]);
       return;
     }

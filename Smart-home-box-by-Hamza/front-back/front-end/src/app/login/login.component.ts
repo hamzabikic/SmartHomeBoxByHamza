@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
+import {LoginProvjera} from "../Services/LoginProvjera";
 
 @Component({
   selector: 'app-login',
@@ -28,6 +29,7 @@ export class LoginComponent implements OnInit {
       // @ts-ignore
       localStorage.setItem("my-token", JSON.stringify(res.prijava));
       this.moguce_slanje= true;
+      LoginProvjera.interval = setInterval(async ()=> await LoginProvjera.servis!.provjeraPrijave(),1000);
       this.router.navigate([""]);
       return;
     }

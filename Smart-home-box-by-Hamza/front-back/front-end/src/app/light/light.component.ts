@@ -19,9 +19,8 @@ export class LightComponent implements OnInit, OnDestroy {
   upaljenoSvjetlo = false;
   db:any;
   interval:NodeJS.Timeout | undefined = undefined;
-  provjera:NodeJS.Timeout | undefined = undefined;
   interval2:NodeJS.Timeout | undefined = undefined;
-  constructor(private http :HttpClient ,private auth:AuthService, public login: LoginProvjera) {
+  constructor(private http :HttpClient ,private auth:AuthService) {
     this.db = getDatabase();
   }
 
@@ -31,11 +30,8 @@ export class LightComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.ucitajPodatke();
-    await this.login.provjeraPrijave();
     await this.ucitajTajming();
     this.interval = setInterval(()=> {this.ucitajPodatke()}, 1000);
-    this.provjera = setInterval(async ()=> {await this.login.provjeraPrijave();
-    } ,1000);
     this.interval2 = setInterval(async()=>await this.ucitajTajming(),1000);
   }
   prekiniTajming() {

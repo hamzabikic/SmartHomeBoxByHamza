@@ -19,17 +19,14 @@ export class ProfileComponent implements OnInit, OnDestroy {
   moguce_slanje = true;
   moguce_slanje2 = true;
   moguce_slanje3 = true;
-  provjera:NodeJS.Timeout | undefined = undefined;
-  constructor(private http:HttpClient, private router: Router, public login : LoginProvjera) { }
+  constructor(private http:HttpClient, private router: Router) { }
 
   ngOnDestroy(): void {
     }
 
 
   async ngOnInit() {
-    await this.login.provjeraPrijave();
     await this.ucitajPodatke();
-    this.provjera = setInterval(async ()=> {await this.login.provjeraPrijave();},1000);
   }
   async ucitajPodatke() {
     this.korisnik = await this.http.get<KorisnikInfo>("https://smarthomeapi.p2347.app.fit.ba/getInfo").toPromise();
@@ -52,7 +49,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
   async odjavise(){
     InfoClass.moguce = false;
-    clearInterval(this.provjera);
+    clearInterval(LoginProvjera.interval);
     this.moguce_slanje3 = false;
     setTimeout(async () => {
       let res = await this.http.get("https://smarthomeapi.p2347.app.fit.ba/Odjava").toPromise();
@@ -69,7 +66,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         InfoClass.moguce = true;
         return;
       }
-      this.provjera= setInterval(async ()=> {await this.login.provjeraPrijave();},1000);
+      LoginProvjera.interval = setInterval(async ()=> await LoginProvjera.servis!.provjeraPrijave(),1000);
       this.moguce_slanje3 = true;
       InfoClass.moguce = true;
     }, 2000);

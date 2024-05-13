@@ -12,14 +12,10 @@ import {TimeoutInfo} from "rxjs";
 export class ApplicationsComponent implements OnInit{
   prijave:any;
   moguce_slanje = true;
-  provjera:NodeJS.Timeout | undefined = undefined;
-  constructor(private http:HttpClient, protected auth:AuthService, public login:LoginProvjera) { }
+  constructor(private http:HttpClient, protected auth:AuthService) { }
 
   async ngOnInit(){
-    await this.login.provjeraPrijave();
     await this.ucitajPrijave();
-    this.provjera = setInterval(async ()=> {await this.login.provjeraPrijave();
-    } ,1000);
   }
   async ucitajPrijave() {
      this.prijave = await this.http.get("https://smarthomeapi.p2347.app.fit.ba/getPrijave").toPromise();

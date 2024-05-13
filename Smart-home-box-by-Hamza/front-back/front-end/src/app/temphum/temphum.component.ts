@@ -23,8 +23,7 @@ export class TemphumComponent implements OnInit, OnDestroy {
   datum:string ="";
   dropDown = "1";
   interval: NodeJS.Timeout | undefined = undefined;
-  provjera:NodeJS.Timeout | undefined = undefined;
-  constructor(private http: HttpClient, private auth: AuthService, public login: LoginProvjera) {
+  constructor(private http: HttpClient, private auth: AuthService) {
     this.db = getDatabase();
 
   }
@@ -36,11 +35,8 @@ export class TemphumComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.setujDatum();
     this.ucitajPodatke();
-    await this.login.provjeraPrijave();
     await this.ucitajHistory();
     this.interval = setInterval(()=> {this.ucitajPodatke()},1000);
-    this.provjera = setInterval(async ()=> {await this.login.provjeraPrijave();
-    } ,1000);
   }
   setujDatum() {
     this.datum=new Date().toISOString().split('T')[0];

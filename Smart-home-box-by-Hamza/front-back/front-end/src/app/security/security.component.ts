@@ -23,8 +23,7 @@ export class SecurityComponent implements OnInit, OnDestroy {
   dropDown = "1";
   movement = "";
   interval:NodeJS.Timeout | undefined = undefined;
-  provjera:NodeJS.Timeout | undefined = undefined;
-  constructor(private http: HttpClient, private auth:AuthService, public login: LoginProvjera) {
+  constructor(private http: HttpClient, private auth:AuthService) {
     this.db = getDatabase();
   }
 
@@ -35,11 +34,8 @@ export class SecurityComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.setujDatum();
     this.ucitajSenzore();
-    await this.login.provjeraPrijave();
     await this.ucitajHistory();
     this.interval = setInterval(()=> {this.ucitajSenzore();},1000);
-    this.provjera = setInterval(async ()=> {await this.login.provjeraPrijave();
-    } ,1000);
   }
   setujDatum() {
     this.datum=new Date().toISOString().split('T')[0];
