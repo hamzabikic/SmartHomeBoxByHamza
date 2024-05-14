@@ -63,7 +63,7 @@ This project provides a comprehensive home monitoring system that allows users t
 <img src="/Images/vanjski4.jpg">
 <img src="/Images/vanjski5.jpg">
 <h4>Control side - computer</h4>
-<img style="width:400px"src="/Images/login.JPG">
+<img src="/Images/login.JPG">
 <img src="/Images/password-change.JPG">
 <img src="/Images/profile.JPG">
 <img src="/Images/temperature-humidity.JPG">
@@ -72,14 +72,14 @@ This project provides a comprehensive home monitoring system that allows users t
 <img src="/Images/light.JPG">
 <img src="/Images/ipaddresses.JPG">
 <h4>Control side - smartphone</h4>
-<img src="/Images/mob_login.jpeg">
-<img src="/Images/mob_password.jpeg">
-<img src="/Images/mob_temperature.jpeg">
-<img src="/Images/mob_fire.jpeg">
-<img src="/Images/mob_security.jpeg">
-<img src="/Images/mob_light.jpeg">
-<img src="/Images/mob_profile.jpeg">
-<img src="/Images/mob_ipaddresses.jpeg">
+<img style="width:600px" src="/Images/mob_login.jpeg">
+<img style="width:600px" src="/Images/mob_password.jpeg">
+<img style="width:600px" src="/Images/mob_temperature.jpeg">
+<img style="width:600px" src="/Images/mob_fire.jpeg">
+<img style="width:600px" src="/Images/mob_security.jpeg">
+<img style="width:600px" src="/Images/mob_light.jpeg">
+<img style="width:600px" src="/Images/mob_profile.jpeg">
+<img style="width:600px" src="/Images/mob_ipaddresses.jpeg">
 
 <h3>License</h3>
 This project is licensed under the MIT License.
