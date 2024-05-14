@@ -27,11 +27,18 @@ export class AppComponent implements OnInit{
 
   protected readonly InfoClass = InfoClass;
   getSvjetlo() {
+    let visina = 750;
+    if(window.innerHeight>750) {
+      visina = window.innerHeight;
+    }
     if(AppComponent.lightMode) {
-      return {backgroundColor : "rgb(26,54,93)" };
+      return {backgroundColor : "rgb(26,54,93)" ,
+        height: visina +"px"
+      };
     }
     else {
-      return {backgroundColor : "black" };
+      return {backgroundColor : "black",
+        height: visina +"px"};
     }
   }
   getBorder() {
