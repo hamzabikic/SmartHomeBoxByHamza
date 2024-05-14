@@ -36,7 +36,7 @@ export class LoginProvjera {
     get(child(ref(this.db), `${this.auth.getId()}/`)).then(
       (snapshot: any) => {
         if (snapshot.exists()) {
-          if (snapshot.val().Svjetlost ==1023) {
+          if (snapshot.val().Svjetlost >=1023) {
             AppComponent.lightMode = false;
           }
           else {

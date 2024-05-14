@@ -28,6 +28,7 @@ int RIFSensor = 2;
 int buzzer2 = 12;
 int AlarmPokret = 0;
 int svjetlo =4;
+int photoresistor = A0;
 dht11 DHT;
 WiFiClient client; // Kreiramo WiFiClient objekt
 HTTPClient http;
@@ -128,7 +129,6 @@ bool provjeraVeze() {
   http.begin(client, "http://smarthomeapi.p2347.app.fit.ba/TestirajKonekciju");
   int httpCode = http.GET();
   if (httpCode > 0) {
-    Serial.printf("HTTP kod odgovora: %d\n", httpCode);
     if (httpCode == HTTP_CODE_OK) {
 
     } else {
@@ -182,13 +182,14 @@ void setup() {
   pinMode(buzzer2, OUTPUT);
   pinMode(RIFSensor, INPUT);
   pinMode(temperatureSensor,INPUT);
+  pinMode(photoresistor,INPUT);
   Firebase.RTDB.setInt(&fbdo, "2/SenzorPokreta",0);
   Firebase.RTDB.setInt(&fbdo, "2/AlarmPokret", 0);
 }
 int aktivanSigurnosniSustav = 0;
 int poslano = false;
 void loop() {
-    if(WiFi.status() == WL_CONNECTED && provjeraVeze()) {
+   if(WiFi.status() == WL_CONNECTED && provjeraVeze()) {
       while (!Firebase.ready()) {
         Serial.println("Prekinuta konekcija sa Firebase");
         podesavanjeFirebase();
@@ -212,6 +213,8 @@ if(aktivanSigurnosniSustav == 1) {
   Firebase.RTDB.setInt(&fbdo, "2/Temperature", DHT.temperature);
   Firebase.RTDB.setInt(&fbdo, "2/Humidity", DHT.humidity);
   slanjeTemperature(DHT.temperature, DHT.humidity);
+  int photo = analogRead(photoresistor);
+  Firebase.RTDB.setInt(&fbdo, "2/Svjetlost", photo);
   if(Firebase.RTDB.getInt(&fbdo, "/2/AlarmPokret")){
         if(fbdo.dataType() == "int"){
           AlarmPokret = fbdo.intData();
