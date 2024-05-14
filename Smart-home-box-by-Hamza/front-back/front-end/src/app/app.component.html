@@ -1,4 +1,5 @@
-<header>
+<div id="sve" [ngStyle]="getSvjetlo()">
+<header [ngStyle]="getBorder()">
   <img src="assets/logo-no-background.png" id="logo">
 </header>
 <nav>
@@ -10,7 +11,8 @@
     <button [disabled]="!InfoClass.moguce" id="id5" style="margin-right:0;" routerLink="/profile" type="button" class="btn btn-light"><img src="https://iconape.com/wp-content/files/nb/368023/svg/person-logo-icon-png-svg.png"></button>
   </div>
 </nav>
-<div id="info">
+<div id="info" >
   <router-outlet></router-outlet>
+</div>
 </div>
 

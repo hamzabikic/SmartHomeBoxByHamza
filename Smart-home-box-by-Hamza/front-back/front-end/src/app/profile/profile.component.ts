@@ -4,6 +4,7 @@ import {KorisnikInfo} from "../Klase/Klase";
 import {Router} from "@angular/router";
 import {LoginProvjera} from "../Services/LoginProvjera";
 import {InfoClass} from "../Services/InfoClass";
+import {AppComponent} from "../app.component";
 
 @Component({
   selector: 'app-profile',
@@ -50,6 +51,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   async odjavise(){
     InfoClass.moguce = false;
     clearInterval(LoginProvjera.interval);
+    clearInterval(LoginProvjera.svjetloInterval);
     this.moguce_slanje3 = false;
     setTimeout(async () => {
       let res = await this.http.get("https://smarthomeapi.p2347.app.fit.ba/Odjava").toPromise();
@@ -67,6 +69,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         return;
       }
       LoginProvjera.interval = setInterval(async ()=> await LoginProvjera.servis!.provjeraPrijave(),1000);
+      LoginProvjera.svjetloInterval = setInterval(()=> { LoginProvjera.servis!.getSvjetlost()},1000);
       this.moguce_slanje3 = true;
       InfoClass.moguce = true;
     }, 2000);

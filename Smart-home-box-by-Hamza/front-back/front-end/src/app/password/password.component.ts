@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Router} from "@angular/router";
+import {AppComponent} from "../app.component";
 
 @Component({
   selector: 'app-password',
@@ -33,6 +34,14 @@ export class PasswordComponent implements OnInit {
     alert(res.greska);
     this.email="";
     this.moguce_slanje= true;
+  }
+  getSvjetlo() {
+    if(AppComponent.lightMode) {
+      return {backgroundColor:"rgb(26,54,93)"};
+    }
+    else {
+      return {backgroundColor:"black"};
+    }
   }
 
 }
