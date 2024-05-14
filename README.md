@@ -63,7 +63,7 @@ This project provides a comprehensive home monitoring system that allows users t
 <img src="/Images/vanjski4.jpg">
 <img src="/Images/vanjski5.jpg">
 <h4>Control side - computer</h4>
-<img src="/Images/login.JPG">
+<img style="width:400px"src="/Images/login.JPG">
 <img src="/Images/password-change.JPG">
 <img src="/Images/profile.JPG">
 <img src="/Images/temperature-humidity.JPG">
