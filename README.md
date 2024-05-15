@@ -58,10 +58,10 @@ This project provides a comprehensive home monitoring system that allows users t
 <h3>Images</h3>
 <h4>Executive side</h4>
 <img src="/Images/vanjski1.jpg">
-<img src="/Images/vanjski2.jpg">
-<img src="/Images/vanjski3.jpg">
-<img src="/Images/vanjski4.jpg">
-<img src="/Images/vanjski5.jpg">
+<img src="/Images/vanjski2.jpeg">
+<img src="/Images/vanjski3.jpeg">
+<img src="/Images/vanjski4.jpeg">
+<img src="/Images/vanjski5.jpeg">
 <h4>Control side - computer</h4>
 <img src="/Images/login.JPG">
 <img src="/Images/password-change.JPG">
