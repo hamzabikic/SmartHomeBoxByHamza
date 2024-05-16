@@ -23,16 +23,18 @@ namespace SmartHomeApi.Helpers
                 EnableSsl = true
             };
         }
-        public async Task<bool> sendPassword(string emailTo, string password)
+        public async Task<bool> sendPassword(string emailTo, string password, string username)
         {
             try
             {
-                var subject = "Smart home box by Hamza - IZMJENA LOZINKE";
+                var subject = "Smart home box by Hamza - PASSWORD CHANGE";
                 MailMessage mailMessage = new MailMessage
                 {
                     From = new MailAddress("adszarada55@gmail.com"),
                     Subject = subject,
-                    Body = $"Vasa privremena lozinka za prijavu je: {password}",
+                    Body = $"Your new application login details are:\n " +
+                    $"Username: {username}\n" +
+                    $"Password: {password}",
                     IsBodyHtml = false
                 };
 
@@ -56,7 +58,7 @@ namespace SmartHomeApi.Helpers
         {
             try
             {
-                var subject = "Smart home box by Hamza - UPOZORENJE";
+                var subject = "Smart home box by Hamza - WARNING";
                 MailMessage mailMessage = new MailMessage
                 {
                     From = new MailAddress("adszarada55@gmail.com"),

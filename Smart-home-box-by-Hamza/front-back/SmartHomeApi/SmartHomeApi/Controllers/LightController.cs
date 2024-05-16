@@ -20,7 +20,7 @@ namespace SmartHomeApi.Controllers
             auth = _auth;
         }
         [HttpPost]
-        public async void startnoVrijeme()
+        private async void startnoVrijeme()
         {
             var prijavaInfo = await auth.getInfo();
             TimeSpan _pocetak = new TimeSpan(0, 0, 0);

@@ -33,6 +33,7 @@ namespace SmartHomeApi.Controllers
         public async Task<bool> AddInfo(AddInfoRequest req)
         {
             var prijavaInfo = await auth.getInfo();
+            if (!prijavaInfo.Prijava.JeUredjaj) return false;
             var novi = new CO2FireAlarm
             { DatumVrijeme = DateTime.Now, CO2Value = req.GasValue, FireDetected = req.FireDetected,
             KorisnikId = prijavaInfo.Prijava.KorisnikId};
@@ -41,11 +42,11 @@ namespace SmartHomeApi.Controllers
             var poruka = "";
             if(req.FireDetected)
             {
-                poruka = "Smart home box by Hamza: Detektovan pozar u prostoru. Molimo posjetite aplikaciju za vise detalja.";
+                poruka = "Smart home box by Hamza: Fire detected in your home. Please visit the application for more details.";
             }
             else
             {
-                poruka = "Smart home box by Hamza: Detektovano pustanje gasa u prostoru. Molimo posjetite aplikaciju za vise detalja.";
+                poruka = "Smart home box by Hamza: Gas leak detected in your home. Please visit the application for more details.";
             }
             await emailSender.sendEmail(poruka);
             await sender.sendMessage(poruka);

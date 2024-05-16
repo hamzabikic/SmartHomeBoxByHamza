@@ -1,5 +1,6 @@
 ﻿using Duende.IdentityServer.ResponseHandling;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.IIS.Core;
 using Microsoft.EntityFrameworkCore;
 using SmartHomeApi.Data;
 using SmartHomeApi.Data.Tablice;
@@ -86,7 +87,7 @@ namespace SmartHomeApi.Controllers
                 return new KorisnikEditResponse { Editovan = false, Greska = "The email doesn't exist in the system!" };
             }
             var lozinka = PasswordGenerator.GenerisiLozinku();
-            if (await emailSender.sendPassword(korisnik.Email, lozinka))
+            if (await emailSender.sendPassword(korisnik.Email, lozinka, korisnik.Username))
             {
                 korisnik.Password = lozinka;
                 db.SaveChanges();
@@ -129,7 +130,7 @@ namespace SmartHomeApi.Controllers
         public async Task<KorisnikEdit?> getInfo ()
         {
             var prijavainfo = await auth.getInfo();
-            if (!prijavainfo.jeLogiran) return null;
+            if (!prijavainfo.jeLogiran) throw new Exception("Nemate pravo pristupa!");
             return await db.Korisnici.Where(k => k.Id == prijavainfo.Prijava.KorisnikId).Select(
                 k => new KorisnikEdit
                 {

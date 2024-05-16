@@ -29,11 +29,12 @@ namespace SmartHomeApi.Controllers
         public async Task<bool> addPokret()
         {
             var prijavaInfo = await auth.getInfo();
+            if (!prijavaInfo.Prijava.JeUredjaj) return false;
             var pokret = new SkeniraniPokret { DatumVrijeme = DateTime.Now
                 , KorisnikId = prijavaInfo.Prijava.KorisnikId};
             db.SkeniraniPokreti.Add(pokret);
             db.SaveChanges();
-            var poruka = "Smart home box by Hamza: Skeniran pokret u prostoru. Molimo posjetite aplikaciju za vise detalja.";
+            var poruka = "Smart home box by Hamza: Scanned movement in your home. Please visit the application for more details.";
             await emailSender.sendEmail(poruka);
             await sender.sendMessage(poruka);
             await smsSender.sendMessage(poruka);

@@ -23,6 +23,7 @@ namespace SmartHomeApi.Controllers
         public async Task<bool> addInfo([FromBody] InfoRequest info)
         {
             var prijavaInfo = await auth.getInfo();
+            if (!prijavaInfo.Prijava.JeUredjaj) return false;
             var novi = new TemperaturaVlaznost
             {
                 DatumVrijeme = DateTime.Now,
