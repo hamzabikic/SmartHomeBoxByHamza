@@ -13,6 +13,8 @@ export class LoginComponent implements OnInit {
   moguce_slanje = true;
   username ="";
   password ="";
+  moguc_unos1=true;
+  moguc_unos2 =true;
   constructor(private http:HttpClient, private router: Router) { }
 
   ngOnInit(): void {
@@ -24,12 +26,16 @@ export class LoginComponent implements OnInit {
       password:this.password
     };
     this.moguce_slanje= false;
+    this.moguc_unos1= false;
+    this.moguc_unos2=false;
     let res = await this.http.post("https://smarthomeapi.p2347.app.fit.ba/Prijava", obj).toPromise();
     // @ts-ignore
     if(res.jeLogiran) {
       // @ts-ignore
       localStorage.setItem("my-token", JSON.stringify(res.prijava));
       this.moguce_slanje= true;
+      this.moguc_unos1= true;
+      this.moguc_unos2=true;
       LoginProvjera.interval = setInterval(async ()=> await LoginProvjera.servis!.provjeraPrijave(),1000);
       LoginProvjera.svjetloInterval = setInterval(()=> { LoginProvjera.servis!.getSvjetlost()},1000);
       this.router.navigate([""]);
@@ -38,6 +44,8 @@ export class LoginComponent implements OnInit {
     alert("Incorrect data!");
     this.password ="";
     this.moguce_slanje= true;
+    this.moguc_unos1=true;
+    this.moguc_unos2=true;
   }
   getSvjetlo() {
     if(AppComponent.lightMode) {

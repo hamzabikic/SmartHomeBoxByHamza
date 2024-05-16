@@ -5,7 +5,6 @@ import {HttpClient} from "@angular/common/http";
 import {AuthService} from "../Services/AuthService";
 import {LoginProvjera} from "../Services/LoginProvjera";
 import {environment} from "../../environments/environment.prod";
-import {InfoClass} from "../Services/InfoClass";
 @Component({
   selector: 'app-light',
   templateUrl: './light.component.html',
@@ -20,6 +19,7 @@ export class LightComponent implements OnInit, OnDestroy {
   db:any;
   interval:NodeJS.Timeout | undefined = undefined;
   interval2:NodeJS.Timeout | undefined = undefined;
+  podloga = false;
   constructor(private http :HttpClient ,private auth:AuthService) {
     this.db = getDatabase();
   }
@@ -45,7 +45,7 @@ export class LightComponent implements OnInit, OnDestroy {
     this.drugoVrijeme = obj.kraj;
   }
   async setTime () {
-    InfoClass.moguce=false;
+    this.podloga = true;
     clearInterval(this.interval2);
    let obj = await this.http.post("https://smarthomeapi.p2347.app.fit.ba/Light/setTime?pocetak="+this.prvoVrijeme+"&kraj="+
       this.drugoVrijeme, {}).toPromise();
@@ -56,11 +56,11 @@ export class LightComponent implements OnInit, OnDestroy {
      alert("Error");
    }
    if(localStorage.getItem("my-token") ==null) {
-     InfoClass.moguce =true;
+     this.podloga = false;
      return;
    }
    this.interval2 = setInterval(async()=> await this.ucitajTajming(),1000);
-   InfoClass.moguce =true;
+   this.podloga = false;
   }
   ucitajPodatke () {
     get(child(ref(this.db), `${this.auth.getId()}/`)).then(

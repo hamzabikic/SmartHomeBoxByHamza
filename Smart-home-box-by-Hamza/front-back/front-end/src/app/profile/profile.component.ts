@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {KorisnikInfo} from "../Klase/Klase";
 import {Router} from "@angular/router";
 import {LoginProvjera} from "../Services/LoginProvjera";
-import {InfoClass} from "../Services/InfoClass";
+
 import {AppComponent} from "../app.component";
 
 @Component({
@@ -20,6 +20,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
   moguce_slanje = true;
   moguce_slanje2 = true;
   moguce_slanje3 = true;
+  podloga = false;
   constructor(private http:HttpClient, private router: Router) { }
 
   ngOnDestroy(): void {
@@ -49,7 +50,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
     }
   }
   async odjavise(){
-    InfoClass.moguce = false;
+    this.podloga=true;
     clearInterval(LoginProvjera.interval);
     clearInterval(LoginProvjera.svjetloInterval);
     this.moguce_slanje3 = false;
@@ -59,19 +60,19 @@ export class ProfileComponent implements OnInit, OnDestroy {
         localStorage.removeItem("my-token");
         this.router.navigate(["/login"]);
         this.moguce_slanje3 = true;
-        InfoClass.moguce = true;
+        this.podloga = false;
         return;
       }
       alert("Unsuccessful logout!");
       if(localStorage.getItem("my-token") == null) {
         this.moguce_slanje3 = true;
-        InfoClass.moguce = true;
+        this.podloga =false;
         return;
       }
       LoginProvjera.interval = setInterval(async ()=> await LoginProvjera.servis!.provjeraPrijave(),1000);
       LoginProvjera.svjetloInterval = setInterval(()=> { LoginProvjera.servis!.getSvjetlost()},1000);
       this.moguce_slanje3 = true;
-      InfoClass.moguce = true;
+      this.podloga = false;
     }, 2000);
   }
 

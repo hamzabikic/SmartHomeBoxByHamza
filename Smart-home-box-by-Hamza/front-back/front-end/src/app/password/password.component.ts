@@ -11,22 +11,25 @@ import {AppComponent} from "../app.component";
 export class PasswordComponent implements OnInit {
   email ="";
   moguce_slanje = true;
+  moguc_unos = true;
   constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
   }
 
   async promijeniLozinku() {
+    this.moguce_slanje= false;
+    this.moguc_unos=false;
     let obj = {
       email: this.email
     };
-    this.moguce_slanje= false;
    let res = await this.http.post("https://smarthomeapi.p2347.app.fit.ba/generisiNovuLozinku", obj)
      .toPromise();
    // @ts-ignore
     if(res.editovan) {
       alert("Your temporary password has been sent to your email!");
       this.moguce_slanje=true;
+      this.moguc_unos=true;
       this.router.navigate(["/login"]);
       return;
    }
@@ -34,6 +37,7 @@ export class PasswordComponent implements OnInit {
     alert(res.greska);
     this.email="";
     this.moguce_slanje= true;
+    this.moguc_unos=true;
   }
   getSvjetlo() {
     if(AppComponent.lightMode) {

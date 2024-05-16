@@ -1,10 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthService} from "./Services/AuthService";
-import {InfoClass} from "./Services/InfoClass";
+
 import {LoginProvjera} from "./Services/LoginProvjera";
-import {initializeApp} from "firebase/app";
-import {environment} from "../environments/environment.prod";
-import {child, get, getDatabase, ref} from "firebase/database";
+
 
 @Component({
   selector: 'app-root',
@@ -25,7 +23,6 @@ export class AppComponent implements OnInit{
     }
   }
 
-  protected readonly InfoClass = InfoClass;
   getSvjetlo() {
     let visina = 750;
     if(window.innerHeight>750) {
