@@ -15,7 +15,7 @@
             <label for="exampleInputPassword1" class="form-label">Password</label>
             <input (keydown.enter)="prijava()"  [disabled]="!moguc_unos2" [(ngModel)]="password" type="password" class="form-control" id="exampleInputPassword1">
           </div>
-          <button [disabled]="!moguce_slanje" (click)="prijava()" type="submit" class="btn btn-primary">Log me</button>
+          <button [disabled]="!moguce_slanje" (click)="prijava()" type="submit" class="btn btn-primary">Log in</button>
           <a style="display:block;margin-top:10px;width:fit-content" routerLink="/password">I forgot my password</a>
         </div>
       </div>
