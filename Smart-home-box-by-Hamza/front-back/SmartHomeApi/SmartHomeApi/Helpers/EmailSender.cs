@@ -32,7 +32,7 @@ namespace SmartHomeApi.Helpers
                 {
                     From = new MailAddress("adszarada55@gmail.com"),
                     Subject = subject,
-                    Body = $"Your new application login details are:\n " +
+                    Body = $"Your new application login details are:\n" +
                     $"Username: {username}\n" +
                     $"Password: {password}",
                     IsBodyHtml = false
