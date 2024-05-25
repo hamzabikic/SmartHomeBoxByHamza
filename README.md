@@ -80,6 +80,14 @@ This project provides a comprehensive home monitoring system that allows users t
 <img style="width:400px" src="/Images/mob_light.jpeg">
 <img style="width:400px" src="/Images/mob_profile.jpeg">
 <img style="width:400px" src="/Images/mob_ipaddresses.jpeg">
+<h4>Notifications</h4>
+<h5>SMS notifications</h5>
+<img style="width:400px" src="/Images/notifikacija-sms.jpg">
+<h5>WhatsApp notifications</h5>
+<img style="width:400px" src="/Images/notifikacija-wp.jpg">
+<h5>Email Notifications</h5>
+<img style="width:400px" src="/Images/notifikacija-email.jpg">
+
 
 <h3>License</h3>
 This project is protected by the "Proprietary No-Use License". See the LICENSE file for more information.
