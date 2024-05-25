@@ -82,4 +82,4 @@ This project provides a comprehensive home monitoring system that allows users t
 <img style="width:400px" src="/Images/mob_ipaddresses.jpeg">
 
 <h3>License</h3>
-This project is licensed under the MIT License.
+This project is protected by the "Proprietary No-Use License". See the LICENSE file for more information.
