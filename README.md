@@ -85,7 +85,7 @@ This project provides a comprehensive home monitoring system that allows users t
 <img style="width:400px" src="/Images/notifikacija-sms.jpg">
 <h5>WhatsApp notifications</h5>
 <img style="width:400px" src="/Images/notifikacija-wp.jpg">
-<h5>Email Notifications</h5>
+<h5>Email notifications</h5>
 <img style="width:400px" src="/Images/notifikacija-email.jpg">
 
 
