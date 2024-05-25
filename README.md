@@ -66,7 +66,8 @@ This project provides a comprehensive home monitoring system that allows users t
 <img src="/Images/login.JPG">
 <img src="/Images/password-change.JPG">
 <img src="/Images/profile.JPG">
-<img src="/Images/temperature-humidity.JPG">
+<img src="/Images/temphumchart.JPG">
+<img src="/Images/temphumhistory.JPG">
 <img src="/Images/gas-fire.JPG">
 <img src="/Images/security.JPG">
 <img src="/Images/light.JPG">
@@ -74,7 +75,8 @@ This project provides a comprehensive home monitoring system that allows users t
 <h4>Control side - smartphone</h4>
 <img style="width:400px" src="/Images/mob_login.jpeg">
 <img style="width:400px" src="/Images/mob_password.jpeg">
-<img style="width:400px" src="/Images/mob_temperature.jpeg">
+<img style="width:400px" src="/Images/temphumchart-mob.jpg">
+<img style="width:400px" src="/Images/temphumhistory-mob.jpg">
 <img style="width:400px" src="/Images/mob_fire.jpeg">
 <img style="width:400px" src="/Images/mob_security.jpeg">
 <img style="width:400px" src="/Images/mob_light.jpeg">
