@@ -1,12 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {getDatabase, ref, get, set, child, update, remove} from 'firebase/database';
-import {initializeApp} from "firebase/app";
 import {HttpClient} from "@angular/common/http";
 import {TemperaturaVlaznost, temphumlista} from "../Klase/Klase";
 import {AuthService} from "../Services/AuthService";
-import {LoginComponent} from "../login/login.component";
-import {LoginProvjera} from "../Services/LoginProvjera";
-import {environment} from "../../environments/environment.prod";
+
 
 @Component({
   selector: 'app-temphum',
@@ -14,17 +10,11 @@ import {environment} from "../../environments/environment.prod";
   styleUrls: ['./temphum.component.css']
 })
 export class TemphumComponent implements OnInit, OnDestroy {
-  app = initializeApp(environment.firebaseConfig);
-  temperatura ="";
-  humidity ="";
-  db:any;
   isDate = false;
   historyLista :TemperaturaVlaznost[] = [];
   datum:string ="";
   dropDown = "1";
-  interval: NodeJS.Timeout | undefined = undefined;
   constructor(private http: HttpClient, private auth: AuthService) {
-    this.db = getDatabase();
 
   }
 
@@ -34,9 +24,7 @@ export class TemphumComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.setujDatum();
-    this.ucitajPodatke();
     await this.ucitajHistory();
-    this.interval = setInterval(()=> {this.ucitajPodatke()},1000);
   }
   setujDatum() {
     this.datum=new Date().toISOString().split('T')[0];
@@ -72,31 +60,5 @@ export class TemphumComponent implements OnInit, OnDestroy {
         this.historyLista = infoLista!.infoLista;
     }
   }
-  ucitajPodatke () {
-    get(child(ref(this.db), `${this.auth.getId()}/`)).then(
-      (snapshot: any) => {
-        if (snapshot.exists()) {
-          this.temperatura = String(snapshot.val().Temperature);
-          this.humidity = String(snapshot.val().Humidity);
-        } else {
-          console.log("Podaci nisu pronadjeni!");
-        }
-      }
-    ).catch((err: any) => {
-      console.log("Greska: " + err);
-    });
-  }
-  tempcss() {
-    if (parseInt(this.temperatura) < 5) {
-      return {color: "blue", fontWeight: "bolder"};
-    } else if (parseInt(this.temperatura) >= 5 && parseInt(this.temperatura) < 15) {
-      return {color: "dodgerblue", fontWeight: "bolder"};
-    } else if (parseInt(this.temperatura) >= 15 && parseInt(this.temperatura) < 25) {
-      return {color: "green", fontWeight: "bolder"};
-    } else if (parseInt(this.temperatura) >= 25 && parseInt(this.temperatura) < 35) {
-      return {color: "orange", fontWeight: "bolder"};
-    } else {
-      return {color: "red", fontWeight: "bolder"};
-    }
-  }
+
 }

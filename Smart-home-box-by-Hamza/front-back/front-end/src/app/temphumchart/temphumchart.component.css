@@ -32,10 +32,13 @@ h5 {
   float:left;
 }
 #tabela {
-  height:420px;
+  height:330px;
   overflow: scroll;
   width:100%;
   margin-top:20px;
+}
+canvas{
+  width:100%;
 }
 
 @media only screen and (max-width:950px) {
@@ -45,8 +48,9 @@ h5 {
     margin-bottom:10px;
   }
   #tabela {
-    height:370px;
+    height:280px;
   }
+
 }
 
 

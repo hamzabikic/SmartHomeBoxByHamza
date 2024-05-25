@@ -1,6 +1,7 @@
 ﻿using Duende.IdentityServer.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using SmartHomeApi.Data;
 using SmartHomeApi.Data.Tablice;
 using SmartHomeApi.Helpers;
@@ -74,6 +75,143 @@ namespace SmartHomeApi.Controllers
             return new InfoListResponse { InfoLista = lista };
         }
         [HttpGet]
+        public async Task<ChartResponse> getTemperatureChartToday (bool isTemperature)
+        {
+            var prijavaInfo = await auth.getInfo();
+            var datum = DateTime.Now;
+            var labels = new List<string>();
+            var data = new List<double>();
+            var lista = await db.TemperatureVlaznosti.Where(tv =>
+            tv.KorisnikId == prijavaInfo.Prijava.KorisnikId && tv.DatumVrijeme.Date == datum.Date)
+                .OrderBy(tv => tv.DatumVrijeme)
+                .ToListAsync();
+            await Task.Run(() =>
+            {
+                foreach (var temphum in lista)
+                {
+                    if (temphum.DatumVrijeme.Minute != 0) continue;
+                    labels.Add(temphum.DatumVrijeme.Hour + ":" + temphum.DatumVrijeme.Minute);
+                    if (isTemperature)
+                    {
+                        data.Add(temphum.Temperatura);
+                    }
+                    else
+                    {
+                        data.Add(temphum.Vlaznost);
+                    }
+                }
+            });
+            return new ChartResponse
+            {
+                Data = data,
+                Labels = labels
+            };
+        }
+        [HttpGet]
+        public async Task<ChartResponse> getTemperatureChartLast7Days(bool isTemperature)
+        {
+            var prijavaInfo = await auth.getInfo();
+            var datum = DateTime.Now.AddDays(-7);
+            var labels = new List<string>();
+            var data = new List<double>();
+            var lista = await db.TemperatureVlaznosti.Where(tv =>
+            tv.KorisnikId == prijavaInfo.Prijava.KorisnikId && tv.DatumVrijeme.Date >= datum.Date)
+                .OrderBy(tv => tv.DatumVrijeme)
+                .ToListAsync();
+            await Task.Run(() =>
+            {
+                DateTime trenutni = DateTime.Now.Date.AddDays(1);
+                foreach (var temphum in lista)
+                {
+                    if(temphum.DatumVrijeme.Date == trenutni)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        trenutni = temphum.DatumVrijeme.Date;
+                    }
+                    labels.Add(temphum.DatumVrijeme.Date.ToShortDateString()) ;
+                    int brojac = 0;
+                    int sum = 0;
+                    foreach (var temphum2 in lista)
+                    {
+                        if (temphum2.DatumVrijeme.Date == trenutni)
+                        {
+                            if (isTemperature == true)
+                            {
+                                sum += temphum2.Temperatura;
+                                brojac++;
+                            }
+                            else
+                            {
+                                sum += temphum2.Vlaznost;
+                                brojac++;
+                            }
+                        }
+                    }
+                    data.Add(Math.Round((float)sum / brojac,1));
+                }
+            });
+            return new ChartResponse
+            {
+                Data = data,
+                Labels = labels
+            };
+        }
+        [HttpGet]
+        public async Task<ChartResponse> getTemperatureChartLastMonth(bool isTemperature)
+        {
+            var prijavaInfo = await auth.getInfo();
+            var datum = DateTime.Now.AddDays(-30);
+            var labels = new List<string>();
+            var data = new List<double>();
+            var lista = await db.TemperatureVlaznosti.Where(tv =>
+            tv.KorisnikId == prijavaInfo.Prijava.KorisnikId && tv.DatumVrijeme.Date >= datum.Date)
+                .OrderBy(tv => tv.DatumVrijeme)
+                .ToListAsync();
+            await Task.Run(() =>
+            {
+                DateTime trenutni = DateTime.Now.Date.AddDays(1);
+                foreach (var temphum in lista)
+                {
+                    if (temphum.DatumVrijeme.Date == trenutni)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        trenutni = temphum.DatumVrijeme.Date;
+                    }
+                    labels.Add(temphum.DatumVrijeme.Date.ToShortDateString());
+                    int brojac = 0;
+                    int sum = 0;
+                    foreach (var temphum2 in lista)
+                    {
+                        if (temphum2.DatumVrijeme.Date == trenutni)
+                        {
+                            if (isTemperature == true)
+                            {
+                                sum += temphum2.Temperatura;
+                                brojac++;
+                            }
+                            else
+                            {
+                                sum += temphum2.Vlaznost;
+                                brojac++;
+                            }
+                        }
+                    }
+                    data.Add(Math.Round((float)sum / brojac, 1));
+                }
+            });
+            return new ChartResponse
+            {
+                Data = data,
+                Labels = labels
+            };
+        }
+        [HttpGet]
         public async Task<InfoListResponse> getInfoLastMonth()
         {
             var prijavaInfo = await auth.getInfo();
@@ -95,6 +233,11 @@ namespace SmartHomeApi.Controllers
 
 
 
+    }
+    public class ChartResponse
+    {
+        public List<string> Labels { get; set; }
+        public List<double> Data { get; set; }
     }
     public class InfoRequest
     {

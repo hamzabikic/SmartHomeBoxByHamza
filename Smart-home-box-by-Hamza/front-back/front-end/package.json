@@ -20,6 +20,7 @@
     "@angular/router": "^14.2.0",
     "bootstrap": "^5.3.3",
     "bootstrap4-toggle": "^3.6.1",
+    "chart.js": "^4.4.3",
     "firebase": "^10.11.0",
     "ngx-spinner": "^16.0.2",
     "rxjs": "~7.5.0",

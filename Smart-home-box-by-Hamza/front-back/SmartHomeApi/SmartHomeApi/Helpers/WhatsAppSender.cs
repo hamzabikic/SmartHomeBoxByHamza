@@ -19,8 +19,8 @@ namespace SmartHomeApi.Helpers
         {
             var prijavainfo = await auth.getInfo();
             Korisnik korisnik = prijavainfo.Prijava.Korisnik;
-                var accountSid = "AC63cc1500ff6b56016386debfc187a369";
-                var authToken = "a552698078babdc40e90f6882dadb4b9";
+                var accountSid = "--sakriveno--";
+                var authToken = "--sakriveno--";
                 TwilioClient.Init(accountSid, authToken);
                 PhoneNumber sender = new PhoneNumber($"whatsapp:+14155238886");
                 PhoneNumber target = new PhoneNumber($"whatsapp:+{korisnik.BrojTelefona}");

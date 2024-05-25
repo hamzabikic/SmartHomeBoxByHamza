@@ -1,0 +1,29 @@
+<div id="sve">
+  <div id="pregled">
+    <div class="podatak">Temperature: <span [ngStyle]="tempcss()">{{temperatura}} °</span></div>
+    <div class="podatak">Humidity: <span style="color:dodgerblue;font-weight: bolder">{{humidity}} %</span></div>
+  </div>
+  <div id="history">
+    <h5>History</h5>
+    <div id="filter">
+      <select [(ngModel)]="dropDown" (change) ="ucitajChartPodatke()"  id="dropdown" class="form-select" aria-label="Default select example">
+        <option value="1">Today</option>
+        <option value="7">Last 7 days</option>
+        <option value="30">Last 30 days</option>
+      </select>
+      <div class="form-check" style="position:relative; top:5px;">
+        <input (change)="ucitajChartPodatke()" [(ngModel)]="isHumidity" class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+        <label class="form-check-label" for="flexCheckChecked">
+          Humidity
+        </label>
+      </div>
+      <a style="top:5px;position:relative;margin-left:20px;" routerLink="/temphumdata">View data</a>
+    </div>
+    <div id="tabela">
+      <div style="display: block;">
+        <canvas id="temperatureChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+

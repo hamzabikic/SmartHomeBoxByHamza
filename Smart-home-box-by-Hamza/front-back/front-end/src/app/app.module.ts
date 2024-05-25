@@ -19,6 +19,7 @@ import {LoginProvjera} from "./Services/LoginProvjera";
 import { PasswordComponent } from './password/password.component';
 import { ApplicationsComponent } from './applications/applications.component';
 import {ComponentCanDeactivate} from "./Services/ComponentCanDeactivate";
+import { TemphumchartComponent } from './temphumchart/temphumchart.component';
 
 @NgModule({
   declarations: [
@@ -30,14 +31,17 @@ import {ComponentCanDeactivate} from "./Services/ComponentCanDeactivate";
     LightComponent,
     LoginComponent,
     PasswordComponent,
-    ApplicationsComponent
+    ApplicationsComponent,
+    TemphumchartComponent
   ],
     imports: [
         BrowserModule,
         FormsModule,
       RouterModule.forRoot([
-        {path:"temperaturehumidity", component:TemphumComponent, canActivate:[ComponentsCanActivate],
+        {path:"temperaturehumidity", component:TemphumchartComponent, canActivate:[ComponentsCanActivate],
         canDeactivate:[ComponentCanDeactivate], runGuardsAndResolvers: 'always'},
+        {path:"temphumdata", component:TemphumComponent, canActivate:[ComponentsCanActivate],
+          canDeactivate:[ComponentCanDeactivate], runGuardsAndResolvers: 'always'},
         {path:"gasfire", component:GasfireComponent, canActivate:[ComponentsCanActivate]
           ,
           canDeactivate:[ComponentCanDeactivate], runGuardsAndResolvers: 'always'} ,

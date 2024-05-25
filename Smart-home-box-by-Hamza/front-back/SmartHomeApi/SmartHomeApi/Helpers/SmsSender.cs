@@ -21,8 +21,8 @@ namespace SmartHomeApi.Helpers
             Korisnik korisnik = prijavainfo.Prijava.Korisnik;
             if (korisnik.SmsSlanje)
             {
-                var accountSid = "AC63cc1500ff6b56016386debfc187a369";
-                var authToken = "a552698078babdc40e90f6882dadb4b9";
+                var accountSid = "--sakriveno--";
+                var authToken = "--sakriveno--";
                 TwilioClient.Init(accountSid, authToken);
                 PhoneNumber sender = new PhoneNumber("+18454933455");
                 PhoneNumber target = new PhoneNumber($"+{korisnik.BrojTelefona}");

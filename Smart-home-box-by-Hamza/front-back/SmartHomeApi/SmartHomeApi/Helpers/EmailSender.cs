@@ -19,7 +19,7 @@ namespace SmartHomeApi.Helpers
             smtpClient = new SmtpClient("smtp.gmail.com")
             {
                 Port = 587,
-                Credentials = new NetworkCredential("adszarada55@gmail.com", "uqpe mcph hjyk bzgc"),
+                Credentials = new NetworkCredential("adszarada55@gmail.com", "--sakriveno--"),
                 EnableSsl = true
             };
         }
