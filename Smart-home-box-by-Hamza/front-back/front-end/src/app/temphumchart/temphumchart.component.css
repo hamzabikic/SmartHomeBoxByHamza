@@ -48,7 +48,8 @@ canvas{
     margin-bottom:10px;
   }
   #tabela {
-    height:280px;
+    height:230px;
+    margin-top:50px;
   }
 
 }
