@@ -188,19 +188,27 @@ void setup() {
 }
 int aktivanSigurnosniSustav = 0;
 int poslano = false;
+int skeniranPokret =0;
+void provjeraPokreta() {
+   if(aktivanSigurnosniSustav==1 && digitalRead(RIFSensor) == HIGH) {
+          skeniranPokret=1;
+        }
+}
 void loop() {
    if(WiFi.status() == WL_CONNECTED && provjeraVeze()) {
       while (!Firebase.ready()) {
         Serial.println("Prekinuta konekcija sa Firebase");
         podesavanjeFirebase();
       }
+  provjeraPokreta();
   if(Firebase.RTDB.getInt(&fbdo, "/2/AktiviranSigurnosniSustav")){
         if(fbdo.dataType() == "int"){
           aktivanSigurnosniSustav = fbdo.intData();
          }
         }
+  provjeraPokreta();
 if(aktivanSigurnosniSustav == 1) {
-  if(digitalRead(RIFSensor) == HIGH && poslano == false) {
+  if(skeniranPokret ==1 && poslano == false) {
     digitalWrite(buzzer2, LOW);
     Firebase.RTDB.setInt(&fbdo, "2/SenzorPokreta",1);
     AlarmPokret =1;
@@ -209,26 +217,34 @@ if(aktivanSigurnosniSustav == 1) {
     poslano = true;
   } 
   }
+  provjeraPokreta();
   DHT.read(temperatureSensor);
   Firebase.RTDB.setInt(&fbdo, "2/Temperature", DHT.temperature);
+  provjeraPokreta();
   Firebase.RTDB.setInt(&fbdo, "2/Humidity", DHT.humidity);
+  provjeraPokreta();
   slanjeTemperature(DHT.temperature, DHT.humidity);
+  provjeraPokreta();
   int photo = analogRead(photoresistor);
   Firebase.RTDB.setInt(&fbdo, "2/Svjetlost", photo);
+  provjeraPokreta();
   if(Firebase.RTDB.getInt(&fbdo, "/2/AlarmPokret")){
         if(fbdo.dataType() == "int"){
           AlarmPokret = fbdo.intData();
          }
         }
+  provjeraPokreta();
   if(AlarmPokret ==0){
     digitalWrite(buzzer2, HIGH);
     poslano = false;
+    skeniranPokret=0;
   }
     if(Firebase.RTDB.getInt(&fbdo, "/2/AutomatskoSvjetlo")){
         if(fbdo.dataType() == "int"){
           AutomatskoSvjetlo = fbdo.intData();
          }
         }
+    provjeraPokreta();
   if(AutomatskoSvjetlo == 0) {
     int UpaljenoSvjetlo =0;
  if(Firebase.RTDB.getInt(&fbdo, "/2/UpaljenoSvjetlo")){
@@ -236,6 +252,7 @@ if(aktivanSigurnosniSustav == 1) {
           UpaljenoSvjetlo = fbdo.intData();
          }
         }
+        provjeraPokreta();
         if(UpaljenoSvjetlo ==1) {
           analogWrite(svjetlo, 255);
         }
@@ -245,6 +262,7 @@ if(aktivanSigurnosniSustav == 1) {
   }
   else {
       bool trajanje = jeUpaljeno();
+      provjeraPokreta();
       if(trajanje) {
         analogWrite(svjetlo, 255);
       }
