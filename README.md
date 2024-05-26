@@ -35,11 +35,11 @@ The application consists of the following sections:
 Responsiveness: The application is responsible for managing all devices and is designed to be responsive, ensuring seamless control and monitoring across all screen sizes."
 <h3>Other Functionalities</h3>
 
-- Alarm activation history and space temperature and humidity history.
+- Alarm activation history and space temperature and humidity history, including the ability to view this history on a line graph.
 - Possibility of multiplexing projects with the same code by entering access data.
 - Notifications via email, SMS, or WhatsApp about detected dangers.
 - Ability to log out all devices with current logins and retrieve a temporary password via email in case of a forgotten password.
-- View current IP addresses from which the login to the application was made.
+- View current IP addresses from which the login to the application was made and the ability to log out a specific device.
 <h3> Testing the Application</h3>
 The application is available for testing at the following URL: https://hamzabikic.github.io
 
