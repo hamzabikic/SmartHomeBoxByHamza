@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild, ElementRef, Renderer2} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild, ElementRef, Renderer2, OnDestroy} from '@angular/core';
 import {
   Chart, LineController, LineElement, PointElement, LinearScale, CategoryScale, Title, Tooltip, Legend
 } from 'chart.js';
@@ -16,7 +16,7 @@ import {child, get, getDatabase, ref} from "firebase/database";
   templateUrl: './temphumchart.component.html',
   styleUrls: ['./temphumchart.component.css']
 })
-export class TemphumchartComponent implements OnInit{
+export class TemphumchartComponent implements OnInit, OnDestroy{
 
   app = initializeApp(environment.firebaseConfig);
   temperatura ="";
@@ -27,10 +27,15 @@ export class TemphumchartComponent implements OnInit{
   interval: NodeJS.Timeout | undefined = undefined;
   listaChart:any;
   temperaturechart:any;
+  listener:any;
   constructor(private http: HttpClient, private auth: AuthService, private renderer: Renderer2) {
     this.db = getDatabase();
 
   }
+
+  ngOnDestroy(): void {
+        this.listener();
+    }
 
   ucitajChart() {
     if(this.temperaturechart) {
@@ -96,7 +101,7 @@ export class TemphumchartComponent implements OnInit{
     this.ucitajPodatke();
     await this.ucitajChartPodatke();
     this.interval = setInterval(()=> {this.ucitajPodatke()},1000);
-    this.renderer.listen(window, 'resize',  () => {
+    this.listener = this.renderer.listen(window, 'resize',  () => {
       this.ucitajChart();
     });
   }
