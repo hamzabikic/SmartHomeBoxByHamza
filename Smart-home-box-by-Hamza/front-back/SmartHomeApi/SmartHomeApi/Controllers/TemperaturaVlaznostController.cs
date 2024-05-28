@@ -90,7 +90,8 @@ namespace SmartHomeApi.Controllers
                 foreach (var temphum in lista)
                 {
                     if (temphum.DatumVrijeme.Minute != 0) continue;
-                    labels.Add(temphum.DatumVrijeme.Hour + ":" + temphum.DatumVrijeme.Minute);
+                    labels.Add((temphum.DatumVrijeme.Hour<10 ? "0"+temphum.DatumVrijeme.Hour : temphum.DatumVrijeme.Hour) + 
+                        ":" + (temphum.DatumVrijeme.Minute<10 ? "0" + temphum.DatumVrijeme.Minute : temphum.DatumVrijeme.Minute) );
                     if (isTemperature)
                     {
                         data.Add(temphum.Temperatura);
