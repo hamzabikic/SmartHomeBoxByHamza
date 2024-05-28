@@ -77,6 +77,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   async promijeniSifru() {
+    if(this.staraLozinka.length==0 || this.novaLozinka.length ==0) {
+      alert("Current password and new password required!");
+      return;
+    }
      let obj = {
        staraLozinka: this.staraLozinka,
        novaLozinka: this.novaLozinka,

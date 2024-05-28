@@ -21,6 +21,10 @@ export class LoginComponent implements OnInit {
   }
 
   async prijava() {
+    if(this.username.length==0 || this.password.length ==0) {
+      alert("Username and password required!");
+      return;
+    }
     let obj= {
       username:this.username,
       password:this.password

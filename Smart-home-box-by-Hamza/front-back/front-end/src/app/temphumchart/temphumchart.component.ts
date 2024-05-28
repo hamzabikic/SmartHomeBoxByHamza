@@ -83,7 +83,9 @@ export class TemphumchartComponent implements OnInit, OnDestroy{
             },
             ticks: {
               autoSkip: true,
-              maxTicksLimit: 6 // Adjust this value as needed
+              maxTicksLimit: 6,
+              minRotation: 45,
+              maxRotation: 45,
             }
           },
           y: {
