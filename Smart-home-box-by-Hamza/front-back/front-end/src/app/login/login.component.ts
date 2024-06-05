@@ -40,8 +40,8 @@ export class LoginComponent implements OnInit {
       this.moguce_slanje= true;
       this.moguc_unos1= true;
       this.moguc_unos2=true;
-      LoginProvjera.interval = setInterval(async ()=> await LoginProvjera.servis!.provjeraPrijave(),1000);
       LoginProvjera.svjetloInterval = setInterval(()=> { LoginProvjera.servis!.getSvjetlost()},1000);
+      LoginProvjera.interval = setInterval(async ()=> await LoginProvjera.servis!.provjeraPrijave(),1000);
       this.router.navigate([""]);
       return;
     }

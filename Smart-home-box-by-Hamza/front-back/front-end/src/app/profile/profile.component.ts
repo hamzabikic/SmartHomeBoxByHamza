@@ -69,8 +69,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.podloga =false;
         return;
       }
-      LoginProvjera.interval = setInterval(async ()=> await LoginProvjera.servis!.provjeraPrijave(),1000);
       LoginProvjera.svjetloInterval = setInterval(()=> { LoginProvjera.servis!.getSvjetlost()},1000);
+      LoginProvjera.interval = setInterval(async ()=> await LoginProvjera.servis!.provjeraPrijave(),1000);
       this.moguce_slanje3 = true;
       this.podloga = false;
     }, 2000);

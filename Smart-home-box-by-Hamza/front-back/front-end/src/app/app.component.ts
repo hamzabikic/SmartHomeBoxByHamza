@@ -16,10 +16,9 @@ export class AppComponent implements OnInit{
   }
 
   async ngOnInit() {
-    await this.login.provjeraPrijave();
     if (this.auth.jeLogiran()) {
-      LoginProvjera.interval = setInterval(async () => await this.login.provjeraPrijave(), 1000);
       LoginProvjera.svjetloInterval = setInterval(()=> { this.login.getSvjetlost()},1000);
+      LoginProvjera.interval = setInterval(async () => await this.login.provjeraPrijave(), 1000);
     }
   }
 
